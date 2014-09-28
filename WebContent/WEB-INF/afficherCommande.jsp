@@ -9,11 +9,11 @@
 <body>
 	<p>Données du client :</p>
 	<ul>
-		<li>Nom : ${client.nom }</li>
-		<li>Prenom : ${client.prenom }</li>
-		<li>Adresse : ${client.adress }</li>
-		<li>Courriel : ${client.mail }</li>
-		<li>Telephone : ${client.phone }</li>
+		<li>Nom : ${commande.client.nom }</li>
+		<li>Prenom : ${commande.client.prenom }</li>
+		<li>Adresse : ${commande.client.adress }</li>
+		<li>Courriel : ${commande.client.mail }</li>
+		<li>Telephone : ${commande.client.phone }</li>
 	</ul>
 	
 	<p>Données du commande :</p>

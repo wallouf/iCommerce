@@ -41,7 +41,7 @@ public class CreationCommande extends HttpServlet {
 			this.getServletContext().getRequestDispatcher("/WEB-INF/creerCommande.jsp").forward(request, response);
 		}else{
 			Client nouveauClient = new Client((String) request.getParameter("nomClient"), (String) request.getParameter("prenomClient"), (String) request.getParameter("adresseClient"), (String) request.getParameter("emailClient"), (String) request.getParameter("telephoneClient"));
-			request.setAttribute("client", nouveauClient);
+//			request.setAttribute("client", nouveauClient);
 			Commande nouvelleCommande = new Commande(nouveauClient, (String) request.getParameter("modePaiementCommande"), (String) request.getParameter("statutPaiementCommande"), (String) request.getParameter("modeLivraisonCommande"), (String) request.getParameter("statutLivraisonCommande"), Double.valueOf(request.getParameter("montantCommande")));
 			request.setAttribute("commande", nouvelleCommande);
 			this.getServletContext().getRequestDispatcher("/WEB-INF/afficherCommande.jsp").forward(request, response);
