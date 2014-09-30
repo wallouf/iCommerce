@@ -16,7 +16,24 @@ import com.wallouf.icommerce.beans.Commande;
  */
 @WebServlet( "/CreationCommande" )
 public class CreationCommande extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    private static final String PARAM_nomClient               = "nomClient";
+    private static final String PARAM_prenomClient            = "prenomClient";
+    private static final String PARAM_adresseClient           = "adresseClient";
+    private static final String PARAM_telephoneClient         = "telephoneClient";
+    private static final String PARAM_emailClient             = "emailClient";
+
+    private static final String PARAM_modePaiementCommande    = "modePaiementCommande";
+    private static final String PARAM_statutPaiementCommande  = "statutPaiementCommande";
+    private static final String PARAM_modeLivraisonCommande   = "modeLivraisonCommande";
+    private static final String PARAM_statutLivraisonCommande = "statutLivraisonCommande";
+    private static final String PARAM_montantCommande         = "montantCommande";
+
+    private static final String ATT_client                    = "client";
+    private static final String ATT_commande                  = "commande";
+    private static final String ATT_message                   = "message";
+    private static final String ATT_error                     = "error";
+
+    private static final long   serialVersionUID              = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -34,35 +51,54 @@ public class CreationCommande extends HttpServlet {
             IOException {
         // TODO Auto-generated method stub
         /**
+         * Creation des variables
+         */
+        String nom = request.getParameter( PARAM_nomClient );
+        String prenom = request.getParameter( PARAM_prenomClient );
+        String adresse = request.getParameter( PARAM_adresseClient );
+        String telephone = request.getParameter( PARAM_telephoneClient );
+        String email = request.getParameter( PARAM_emailClient );
+
+        String modePaiement = request.getParameter( PARAM_modePaiementCommande );
+        String statutPaiement = request.getParameter( PARAM_statutPaiementCommande );
+        String modeLivraison = request.getParameter( PARAM_modeLivraisonCommande );
+        String statutLivraison = request.getParameter( PARAM_statutLivraisonCommande );
+        Double montant = 0.0;
+
+        String message = "";
+        boolean error = false;
+        String vue = "/WEB-INF/afficherCommande.jsp";
+        /**
          * Verification presence informations
          */
-        if ( request.getParameter( "nomClient" ) == null || request.getParameter( "nomClient" ).isEmpty()
-                || request.getParameter( "adresseClient" ) == null
-                || request.getParameter( "adresseClient" ).isEmpty()
-                || request.getParameter( "telephoneClient" ) == null
-                || request.getParameter( "telephoneClient" ).isEmpty()
-                || request.getParameter( "montantCommande" ) == null
-                || request.getParameter( "montantCommande" ).isEmpty()
-                || request.getParameter( "modePaiementCommande" ) == null
-                || request.getParameter( "modePaiementCommande" ).isEmpty()
-                || request.getParameter( "modeLivraisonCommande" ) == null
-                || request.getParameter( "modeLivraisonCommande" ).isEmpty() ) {
-            this.getServletContext().getRequestDispatcher( "/WEB-INF/creerCommande.jsp" ).forward( request, response );
+        if ( nom == null || adresse == null || telephone == null || montant == null || modeLivraison == null
+                || modePaiement == null ) {
+            vue = "/WEB-INF/creerCommande.jsp";
+        } else if ( nom.trim().isEmpty() || adresse.trim().isEmpty() || telephone.trim().isEmpty() || montant.isNaN()
+                || modeLivraison.trim().isEmpty()
+                || modePaiement.trim().isEmpty() ) {
+            message = "You need to fill all information !";
+            error = true;
+            vue = "/WEB-INF/creerCommande.jsp";
         } else {
-            Client nouveauClient = new Client( (String) request.getParameter( "nomClient" ),
-                    (String) request.getParameter( "prenomClient" ), (String) request.getParameter( "adresseClient" ),
-                    (String) request.getParameter( "emailClient" ), (String) request.getParameter( "telephoneClient" ) );
-            request.setAttribute( "client", nouveauClient );
-            Commande nouvelleCommande = new Commande( nouveauClient,
-                    (String) request.getParameter( "modePaiementCommande" ),
-                    (String) request.getParameter( "statutPaiementCommande" ),
-                    (String) request.getParameter( "modeLivraisonCommande" ),
-                    (String) request.getParameter( "statutLivraisonCommande" ), Double.valueOf( request
-                            .getParameter( "montantCommande" ) ) );
-            request.setAttribute( "commande", nouvelleCommande );
-            this.getServletContext().getRequestDispatcher( "/WEB-INF/afficherCommande.jsp" )
-                    .forward( request, response );
+            message = "Your command was successfully created !";
         }
+        /**
+         * Verification du montant
+         */
+        if ( montant != null && !montant.isNaN() ) {
+            montant = Double.valueOf( request.getParameter( PARAM_montantCommande ) );
+        }
+
+        Client nouveauClient = new Client( nom, prenom, adresse, email, telephone );
+        Commande nouvelleCommande = new Commande( nouveauClient, modePaiement, statutPaiement, modeLivraison,
+                statutLivraison, montant );
+
+        request.setAttribute( ATT_client, nouveauClient );
+        request.setAttribute( ATT_commande, nouvelleCommande );
+        request.setAttribute( ATT_error, error );
+        request.setAttribute( ATT_message, message );
+        this.getServletContext().getRequestDispatcher( vue ).forward( request, response );
     }
 
     /**

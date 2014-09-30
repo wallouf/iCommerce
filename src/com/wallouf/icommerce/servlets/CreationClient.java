@@ -57,12 +57,9 @@ public class CreationClient extends HttpServlet {
         /**
          * Verification presence informations
          */
-        if ( nom == null || telephone == null
-                || adresse == null ) {
+        if ( nom == null || telephone == null || adresse == null ) {
             vue = "/WEB-INF/creerClient.jsp";
-        } else if ( nom.trim().isEmpty() || telephone.trim().isEmpty()
-                || adresse.trim().isEmpty() ) {
-
+        } else if ( nom.trim().isEmpty() || telephone.trim().isEmpty() || adresse.trim().isEmpty() ) {
             message = "You need to fill all information !";
             error = true;
             vue = "/WEB-INF/creerClient.jsp";

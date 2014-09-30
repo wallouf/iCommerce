@@ -8,6 +8,7 @@
 </head>
 <body>
     <c:import url="inc/menu.jsp" />
+    <strong><c:out value="${message }"></c:out></strong><br/>
 	<p>Données du client :</p>
 	<ul>
 		<li>Nom : <c:out value="${commande.client.nom }" /></li>
