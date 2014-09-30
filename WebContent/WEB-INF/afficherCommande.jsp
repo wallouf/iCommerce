@@ -7,23 +7,24 @@
 <title>Insert title here</title>
 </head>
 <body>
+    <c:import url="inc/menu.jsp" />
 	<p>Données du client :</p>
 	<ul>
-		<li>Nom : ${commande.client.nom }</li>
-		<li>Prenom : ${commande.client.prenom }</li>
-		<li>Adresse : ${commande.client.adress }</li>
-		<li>Courriel : ${commande.client.mail }</li>
-		<li>Telephone : ${commande.client.phone }</li>
+		<li>Nom : <c:out value="${commande.client.nom }" /></li>
+		<li>Prenom : <c:out value="${commande.client.prenom }" /></li>
+		<li>Adresse : <c:out value="${commande.client.adress }" /></li>
+		<li>Courriel : <c:out value="${commande.client.mail }" /></li>
+		<li>Telephone : <c:out value="${commande.client.phone }" /></li>
 	</ul>
 	
 	<p>Données du commande :</p>
 	<ul>
-		<li>Date : ${commande.dateCommande }</li>
-		<li>Montant : ${commande.montant }</li>
-		<li>Mode de paiement : ${commande.modeDePaiement }</li>
-		<li>Statu du paiement : ${commande.statutDePaiement }</li>
-		<li>Mode de livraison : ${commande.modeDeLivraison }</li>
-		<li>Statut de livraison : ${commande.statutDeLivraison }</li>
+		<li>Date : <c:out value="${commande.dateCommande }" /></li>
+		<li>Montant : <c:out value="${commande.montant }" /></li>
+		<li>Mode de paiement : <c:out value="${commande.modeDePaiement }" /></li>
+		<li>Statu du paiement : <c:out value="${commande.statutDePaiement }" /></li>
+		<li>Mode de livraison : <c:out value="${commande.modeDeLivraison }" /></li>
+		<li>Statut de livraison : <c:out value="${commande.statutDeLivraison }" /></li>
 	</ul>
 
 </body>

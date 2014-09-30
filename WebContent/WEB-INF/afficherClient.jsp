@@ -7,13 +7,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+    <c:import url="inc/menu.jsp" />
+    <strong><c:out value="${message }"></c:out></strong><br/>
 	<p>Données du client :</p>
 	<ul>
-		<li>Nom : ${client.nom }</li>
-		<li>Prenom : ${client.prenom }</li>
-		<li>Adresse : ${client.adress }</li>
-		<li>Courriel : ${client.mail }</li>
-		<li>Telephone : ${client.phone }</li>
+		<li>Nom : <c:out value="${client.nom }" /> </li>
+		<li>Prenom : <c:out value="${client.prenom }" /></li>
+		<li>Adresse : <c:out value="${client.adress }" /></li>
+		<li>Courriel : <c:out value="${client.mail }" /></li>
+		<li>Telephone : <c:out value="${client.phone }" /></li>
 	</ul>
 
 </body>

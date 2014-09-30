@@ -13,10 +13,20 @@ import com.wallouf.icommerce.beans.Client;
 /**
  * Servlet implementation class CreationClient
  */
-@WebServlet("/CreationClient")
+@WebServlet( "/CreationClient" )
 public class CreationClient extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+    private static final String PARAM_nomClient       = "nomClient";
+    private static final String PARAM_prenomClient    = "prenomClient";
+    private static final String PARAM_adresseClient   = "adresseClient";
+    private static final String PARAM_telephoneClient = "telephoneClient";
+    private static final String PARAM_emailClient     = "emailClient";
+
+    private static final String ATT_client            = "client";
+    private static final String ATT_message           = "message";
+    private static final String ATT_error             = "error";
+
+    private static final long   serialVersionUID      = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -25,29 +35,53 @@ public class CreationClient extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		/**
-		 * Verification presence informations
-		 */
-		if(request.getParameter("nomClient") == null || request.getParameter("nomClient").isEmpty() || request.getParameter("adresseClient") == null
-				|| request.getParameter("adresseClient").isEmpty() || request.getParameter("telephoneClient") == null || request.getParameter("telephoneClient").isEmpty()){
-			this.getServletContext().getRequestDispatcher("/WEB-INF/creerClient.jsp").forward(request, response);
-		}else{
-			Client nouveauClient = new Client((String) request.getParameter("nomClient"), (String) request.getParameter("prenomClient"), (String) request.getParameter("adresseClient"), (String) request.getParameter("emailClient"), (String) request.getParameter("telephoneClient"));
-			request.setAttribute("client", nouveauClient);
-			this.getServletContext().getRequestDispatcher("/WEB-INF/afficherClient.jsp").forward(request, response);
-		}
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
+            IOException {
+        // TODO Auto-generated method stub
+        /**
+         * Creation des variables
+         */
+        String nom = request.getParameter( PARAM_nomClient );
+        String prenom = request.getParameter( PARAM_prenomClient );
+        String adresse = request.getParameter( PARAM_adresseClient );
+        String telephone = request.getParameter( PARAM_telephoneClient );
+        String email = request.getParameter( PARAM_emailClient );
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+        String message = "";
+        boolean error = false;
+        String vue = "/WEB-INF/afficherClient.jsp";
+        /**
+         * Verification presence informations
+         */
+        if ( nom.trim().isEmpty() || telephone.trim().isEmpty()
+                || adresse.trim().isEmpty() ) {
+
+            message = "You need to fill all information !";
+            error = true;
+            vue = "/WEB-INF/creerClient.jsp";
+        } else {
+            message = "Client was successfully created !";
+        }
+        Client nouveauClient = new Client( nom, prenom, adresse, email, telephone );
+
+        request.setAttribute( ATT_client, nouveauClient );
+        request.setAttribute( ATT_message, message );
+        request.setAttribute( ATT_error, error );
+
+        this.getServletContext().getRequestDispatcher( vue ).forward( request, response );
+    }
+
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
+            IOException {
+        // TODO Auto-generated method stub
+    }
 
 }
