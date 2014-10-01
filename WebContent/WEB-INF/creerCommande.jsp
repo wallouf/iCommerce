@@ -10,7 +10,7 @@
        	<c:import url="inc/menu.jsp" />
        	<c:if test="${error == true }"><strong><c:out value="${message }"></c:out></strong><br/></c:if>
         <div>
-            <form method="get" action="<c:url value="creationCommande" />">
+            <form method="post" action="<c:url value="creationCommande" />">
             	<c:import url="inc/inc_clientForm.jsp" />
                 <fieldset>
                     <legend>Informations commande</legend>

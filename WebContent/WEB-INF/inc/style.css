@@ -1,20 +1,22 @@
-/* Général ------------------------------------------------------------------------------------- */
+/* Général
+-------------------------- */
  
 body, p, legend, label, input {
     font: normal 8pt verdana, helvetica, sans-serif;
 }
  
-/* Forms --------------------------------------------------------------------------------------- */
 fieldset {
     padding: 10px;
     border: 1px #0568CD solid;
-    margin: 10px;
 }
  
 legend {
     font-weight: bold;
     color: #0568CD;
 }
+ 
+/* Forms
+-------------------------- */
  
 form label {
     float: left;
@@ -31,20 +33,14 @@ form input.sansLabel {
     margin-left: 200px;
 }
  
-/* Styles et couleurs -------------------------------------------------------------------------- */
-.requis {
+form .requis {
     color: #c00;
 }
- 
-.erreur {
+
+form .erreur {
     color: #900;
 }
- 
-.succes {
+
+form .succes {
     color: #090;
-}
- 
-.info {
-    font-style: italic;
-    color: #E8A22B;
 }
