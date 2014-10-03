@@ -14,6 +14,11 @@ public class Commande {
 
     public Commande() {
         super();
+        /**
+         * Get today date.
+         */
+        DateTime dt = new DateTime();
+        this.dateCommande = dt.getDayOfMonth() + "/" + dt.getMonthOfYear() + "/" + dt.getYear();
     }
 
     public Commande( Client client, String modeDePaiement,
