@@ -121,13 +121,13 @@ public class CreationCommandeForm {
     }
 
     private void validationStatutPaiement( String statutCommande ) throws Exception {
-        if ( statutCommande != null && statutCommande.length() < 2 ) {
+        if ( statutCommande != null && statutCommande.length() < 2 && statutCommande.length() > 0 ) {
             throw new Exception( "Le statut de paiement doit contenir au moins 2 caractères." );
         }
     }
 
     private void validationStatutLivraison( String statutLivraison ) throws Exception {
-        if ( statutLivraison != null && statutLivraison.length() < 2 ) {
+        if ( statutLivraison != null && statutLivraison.length() < 2 && statutLivraison.length() > 0 ) {
             throw new Exception( "Le statut de livraison doit contenir au moins 2 caractères." );
         }
     }

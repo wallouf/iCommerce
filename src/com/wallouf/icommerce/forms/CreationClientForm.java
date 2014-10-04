@@ -78,7 +78,7 @@ public class CreationClientForm {
     }
 
     private void validationEmail( String email ) throws Exception {
-        if ( email != null ) {
+        if ( email != null && email.length() > 0 ) {
             if ( !email.matches( "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)" ) ) {
                 throw new Exception( "Merci de saisir une adresse mail valide." );
             }
@@ -94,7 +94,7 @@ public class CreationClientForm {
     }
 
     private void validationPrenom( String prenom ) throws Exception {
-        if ( prenom != null && prenom.length() < 2 ) {
+        if ( prenom != null && prenom.length() < 2 && prenom.length() > 0 ) {
             throw new Exception( "Le prenom de l'utilisateur doit contenir au moins 2 caractères." );
         }
     }
