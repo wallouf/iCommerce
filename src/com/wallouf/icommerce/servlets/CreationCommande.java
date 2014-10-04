@@ -66,7 +66,7 @@ public class CreationCommande extends HttpServlet {
 
         request.setAttribute( ATT_commande, nouvelleCommande );
         request.setAttribute( ATT_commandeForm, commandeForm );
-        if ( clientForm.getErreurs().isEmpty() ) {
+        if ( clientForm.getErreurs().isEmpty() && commandeForm.getErreurs().isEmpty() ) {
             this.getServletContext().getRequestDispatcher( vueAfficher ).forward( request, response );
         } else {
             this.getServletContext().getRequestDispatcher( vueForm ).forward( request, response );

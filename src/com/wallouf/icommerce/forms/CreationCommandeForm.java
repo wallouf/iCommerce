@@ -60,7 +60,90 @@ public class CreationCommandeForm {
         Commande commande = new Commande();
         commande.setClient( (Client) request.getAttribute( ATT_client ) );
 
+        try {
+            validationModePaiement( modePaiementCommande );
+        } catch ( Exception e ) {
+            setErreur( PARAM_modePaiementCommande, e.getMessage() );
+        }
+        commande.setModeDePaiement( modePaiementCommande );
+
+        try {
+            validationStatutPaiement( statutPaiementCommande );
+        } catch ( Exception e ) {
+            setErreur( PARAM_statutPaiementCommande, e.getMessage() );
+        }
+        commande.setStatutDePaiement( statutPaiementCommande );
+
+        try {
+            validationModeLivraison( modeLivraisonCommande );
+        } catch ( Exception e ) {
+            setErreur( PARAM_modeLivraisonCommande, e.getMessage() );
+        }
+        commande.setModeDeLivraison( modeLivraisonCommande );
+
+        try {
+            validationStatutLivraison( statutLivraisonCommande );
+        } catch ( Exception e ) {
+            setErreur( PARAM_statutLivraisonCommande, e.getMessage() );
+        }
+        commande.setStatutDeLivraison( statutLivraisonCommande );
+
+        try {
+            validationMontant( montantCommande );
+            commande.setMontant( Double.valueOf( montantCommande ) );
+        } catch ( Exception e ) {
+            setErreur( PARAM_montantCommande, e.getMessage() );
+            commande.setMontant( 0.0 );
+        }
+
+        if ( erreurs.isEmpty() ) {
+            message = "Succès de la création de la commande.";
+        } else {
+            message = "Échec de la création de la commande.";
+        }
         return commande;
+    }
+
+    private void validationModePaiement( String modePaiementCommande ) throws Exception {
+        if ( modePaiementCommande != null && modePaiementCommande.length() < 2 ) {
+            throw new Exception( "Le mode de paiement doit contenir au moins 2 caractères." );
+        } else if ( modePaiementCommande == null ) {
+            throw new Exception( "Merci de saisir un mode de paiement." );
+        }
+    }
+
+    private void validationModeLivraison( String modeLivraisonCommande ) throws Exception {
+        if ( modeLivraisonCommande != null && modeLivraisonCommande.length() < 2 ) {
+            throw new Exception( "Le mode de livraison doit contenir au moins 2 caractères." );
+        } else if ( modeLivraisonCommande == null ) {
+            throw new Exception( "Merci de saisir un mode de livraison." );
+        }
+    }
+
+    private void validationStatutPaiement( String statutCommande ) throws Exception {
+        if ( statutCommande != null && statutCommande.length() < 2 ) {
+            throw new Exception( "Le statut de paiement doit contenir au moins 2 caractères." );
+        }
+    }
+
+    private void validationStatutLivraison( String statutLivraison ) throws Exception {
+        if ( statutLivraison != null && statutLivraison.length() < 2 ) {
+            throw new Exception( "Le statut de livraison doit contenir au moins 2 caractères." );
+        }
+    }
+
+    private void validationMontant( String montantCommande ) throws Exception {
+        Double montant;
+        try {
+            montant = Double.valueOf( montantCommande );
+        } catch ( Exception e ) {
+            throw new Exception( "Le montant doit être un chiffre." );
+        }
+        if ( montant.isNaN() ) {
+            throw new Exception( "Le montant doit être un chiffre." );
+        } else if ( montant <= 0.0 ) {
+            throw new Exception( "Le montant doit être positif et supérieur à zéro." );
+        }
     }
 
 }
