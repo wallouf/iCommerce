@@ -13,7 +13,7 @@
             	<c:import url="inc/inc_clientForm.jsp" />
                 <input type="submit" value="Valider"  />
                 <input type="reset" value="Remettre à zéro" /> <br />
-                <p class="${empty form.erreurs ? 'succes' : 'erreur'}">${form.message}</p>
+                <p class="info">${ form.message }</p>
             </form>
         </div>
     </body>

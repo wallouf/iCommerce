@@ -18,7 +18,7 @@ import com.wallouf.icommerce.forms.CreationClientForm;
 public class CreationClient extends HttpServlet {
 
     private static final String ATT_client       = "client";
-    private static final String ATT_clientForm   = "clientForm";
+    private static final String ATT_clientForm   = "form";
     private static final String vueForm          = "/WEB-INF/creerClient.jsp";
     private static final String vueAfficher      = "/WEB-INF/afficherClient.jsp";
 

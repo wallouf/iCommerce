@@ -58,7 +58,12 @@ public class CreationCommandeForm {
         String statutLivraisonCommande = request.getParameter( PARAM_statutLivraisonCommande );
         String montantCommande = request.getParameter( PARAM_montantCommande );
         Commande commande = new Commande();
-        commande.setClient( (Client) request.getAttribute( ATT_client ) );
+        CreationClientForm clientForm = new CreationClientForm();
+
+        Client nouveauClient = clientForm.creerClient( request );
+
+        erreurs = clientForm.getErreurs();
+        commande.setClient( nouveauClient );
 
         try {
             validationModePaiement( modePaiementCommande );

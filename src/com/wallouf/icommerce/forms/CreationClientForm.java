@@ -108,10 +108,11 @@ public class CreationClientForm {
     }
 
     private void validationTelephone( String telephone ) throws Exception {
-        if ( telephone != null && telephone.length() < 4 ) {
-            if ( !telephone.matches( "\\d" ) ) {
+        if ( telephone != null && telephone.length() > 0 ) {
+
+            if ( !telephone.matches( "^\\d+$" ) ) {
                 throw new Exception( "Merci de saisir un telephone valide et d'au moins 4 chiffres." );
-            } else {
+            } else if ( telephone.length() < 4 ) {
                 throw new Exception( "Merci de saisir un telephone d'au moins 4 chiffres." );
             }
         } else if ( telephone == null ) {
