@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.beans.Client;
 import com.wallouf.icommerce.beans.Commande;
 
 public class CreationCommandeForm {
 
-    private static final String ATT_client                    = "client";
+    public static final String  PARAM_listeCommande           = "listeCommande";
     private static final String PARAM_modePaiementCommande    = "modePaiementCommande";
     private static final String PARAM_statutPaiementCommande  = "statutPaiementCommande";
     private static final String PARAM_modeLivraisonCommande   = "modeLivraisonCommande";
@@ -65,6 +66,17 @@ public class CreationCommandeForm {
         erreurs = clientForm.getErreurs();
         commande.setClient( nouveauClient );
 
+        /* Récupération de la session depuis la requête */
+        HttpSession session = request.getSession();
+
+        Map<String, Commande> listeCommande = new HashMap<String, Commande>();
+        if ( session.getAttribute( PARAM_listeCommande ) != null ) {
+            try {
+                listeCommande = (Map<String, Commande>) session.getAttribute( PARAM_listeCommande );
+            } catch ( Exception e ) {
+            }
+        }
+
         try {
             validationModePaiement( modePaiementCommande );
         } catch ( Exception e ) {
@@ -103,6 +115,8 @@ public class CreationCommandeForm {
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de la création de la commande.";
+            listeCommande.put( "" + listeCommande.size(), commande );
+            session.setAttribute( PARAM_listeCommande, listeCommande );
         } else {
             message = "Échec de la création de la commande.";
         }

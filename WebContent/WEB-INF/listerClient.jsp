@@ -9,13 +9,13 @@
 </head>
 <body>
     <c:import url="inc/menu.jsp" />
-	<table>
-		<thead>
-			<tr><th>Index</th><th>Nom</th><th>Prenom</th><th>Adresse</th><th>Telephone</th><th>Email</th></tr>
-		</thead>
-		<tbody>
-			<c:choose>
-				<c:when test="${!empty sessionScope.listeClient }">
+	<c:choose>
+		<c:when test="${!empty sessionScope.listeClient }">
+		<table>
+			<thead>
+				<tr><th>Index</th><th>Nom</th><th>Prenom</th><th>Adresse</th><th>Telephone</th><th>Email</th></tr>
+			</thead>
+			<tbody>
 				<c:forEach items="${sessionScope.listeClient }" varStatus="status" var="liste">
 					<tr>
 						<td><c:out value="${status.index }" /></td>
@@ -26,12 +26,12 @@
 						<td><c:out value="${liste.value.mail }" /></td>
 					</tr>
 				</c:forEach>
-				</c:when>
-				<c:otherwise>
-					Il n'y a pas encore de client ! <a href="<c:url value="creationClient" />" >Créer un client ?</a>
-				</c:otherwise>
-			</c:choose>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+		</c:when>
+		<c:otherwise>
+			Il n'y a pas encore de client ! <a href="<c:url value="creationClient" />" >Créer un client ?</a>
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>
