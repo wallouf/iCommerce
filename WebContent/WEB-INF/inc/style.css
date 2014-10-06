@@ -44,3 +44,30 @@ form .erreur {
 form .succes {
     color: #090;
 }
+
+/* Tableaux -------------------------------------------------------------------------------------*/
+table{
+    border-collapse: collapse;
+}
+tr.pair{
+    background-color: #efefef;
+}
+tr.impair{
+    background-color: #fff;
+}
+th{
+    color: #0568CD;
+    border: 1px solid #0568CD;
+    padding: 5px;
+}
+th.action{
+    border: 1px solid #900;
+    color: #900;
+}
+td{
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+td.action{
+    text-align: center;
+}

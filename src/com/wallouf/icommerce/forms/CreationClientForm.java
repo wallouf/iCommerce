@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.beans.Client;
 
 public class CreationClientForm {
+    public static final String  PARAM_listeClient     = "listeClient";
     private static final String PARAM_nomClient       = "nomClient";
     private static final String PARAM_prenomClient    = "prenomClient";
     private static final String PARAM_adresseClient   = "adresseClient";
@@ -35,8 +37,18 @@ public class CreationClientForm {
         String telephone = request.getParameter( PARAM_telephoneClient );
         String email = request.getParameter( PARAM_emailClient );
         Client client = new Client();
+        /* Récupération de la session depuis la requête */
+        HttpSession session = request.getSession();
+        Map<String, Client> listeClient = new HashMap<String, Client>();
+        if ( session.getAttribute( PARAM_listeClient ) != null ) {
+            try {
+                listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
+            } catch ( Exception e ) {
+            }
+        }
+
         try {
-            validationNom( nom );
+            validationNom( nom, listeClient );
         } catch ( Exception e ) {
             setErreur( PARAM_nomClient, e.getMessage() );
         }
@@ -70,6 +82,11 @@ public class CreationClientForm {
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de l'inscription.";
+            /**
+             * Ajout dans la session de l'utilisateur
+             */
+            listeClient.put( nom, client );
+            session.setAttribute( PARAM_listeClient, listeClient );
         } else {
             message = "Échec de l'inscription.";
         }
@@ -85,11 +102,13 @@ public class CreationClientForm {
         }
     }
 
-    private void validationNom( String nom ) throws Exception {
+    private void validationNom( String nom, Map<String, Client> listeClient ) throws Exception {
         if ( nom != null && nom.length() < 2 ) {
             throw new Exception( "Le nom d'utilisateur doit contenir au moins 2 caractères." );
         } else if ( nom == null ) {
             throw new Exception( "Merci de saisir un nom." );
+        } else if ( !listeClient.isEmpty() && listeClient.containsKey( nom ) ) {
+            throw new Exception( "Merci de saisir un autre nom, car ce compte existe déjà." );
         }
     }
 
