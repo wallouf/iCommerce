@@ -18,6 +18,7 @@ import com.wallouf.icommerce.forms.CreationCommandeForm;
 public class CreationCommande extends HttpServlet {
 
     private static final String ATT_commande     = "commande";
+    public static final String  CHEMIN           = "chemin";
     private static final String ATT_commandeForm = "form";
     private static final String vueForm          = "/WEB-INF/creerCommande.jsp";
     private static final String vueAfficher      = "/WEB-INF/afficherCommande.jsp";
@@ -49,9 +50,10 @@ public class CreationCommande extends HttpServlet {
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
             IOException {
         // TODO Auto-generated method stub
+        String chemin = this.getServletConfig().getInitParameter( CHEMIN );
 
         CreationCommandeForm commandeForm = new CreationCommandeForm();
-        Commande nouvelleCommande = commandeForm.creerCommande( request );
+        Commande nouvelleCommande = commandeForm.creerCommande( request, chemin );
 
         request.setAttribute( ATT_commande, nouvelleCommande );
         request.setAttribute( ATT_commandeForm, commandeForm );

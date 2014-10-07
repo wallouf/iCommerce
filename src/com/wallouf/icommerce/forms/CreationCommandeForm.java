@@ -57,7 +57,7 @@ public class CreationCommandeForm {
         }
     }
 
-    public Commande creerCommande( HttpServletRequest request ) {
+    public Commande creerCommande( HttpServletRequest request, String chemin ) {
         /**
          * Creation des variables
          */
@@ -75,7 +75,7 @@ public class CreationCommandeForm {
         if ( clientType != null && clientType.equalsIgnoreCase( "nouveau" ) ) {
             // creation dun client
             CreationClientForm clientForm = new CreationClientForm();
-            Client nouveauClient = clientForm.creerClient( request );
+            Client nouveauClient = clientForm.creerClient( request, chemin );
             erreurs = clientForm.getErreurs();
             commande.setClient( nouveauClient );
         } else if ( clientType != null && clientType.equalsIgnoreCase( "existant" ) ) {

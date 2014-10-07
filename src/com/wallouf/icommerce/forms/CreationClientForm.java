@@ -1,10 +1,18 @@
 package com.wallouf.icommerce.forms;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.wallouf.icommerce.beans.Client;
 
@@ -15,6 +23,8 @@ public class CreationClientForm {
     private static final String PARAM_adresseClient   = "adresseClient";
     private static final String PARAM_telephoneClient = "telephoneClient";
     private static final String PARAM_emailClient     = "emailClient";
+    private static final String CHAMP_FICHIER         = "fichier";
+    private static final int    TAILLE_TAMPON         = 10240;
 
     private String              message;
     private Map<String, String> erreurs               = new HashMap<String, String>();
@@ -27,16 +37,17 @@ public class CreationClientForm {
         return erreurs;
     }
 
-    public Client creerClient( HttpServletRequest request ) {
+    public Client creerClient( HttpServletRequest request, String chemin ) {
         /**
          * Creation des variables
          */
-        String nom = request.getParameter( PARAM_nomClient );
-        String prenom = request.getParameter( PARAM_prenomClient );
-        String adresse = request.getParameter( PARAM_adresseClient );
-        String telephone = request.getParameter( PARAM_telephoneClient );
-        String email = request.getParameter( PARAM_emailClient );
+        String nom = getValeurChamp( request, PARAM_nomClient );
+        String prenom = getValeurChamp( request, PARAM_prenomClient );
+        String adresse = getValeurChamp( request, PARAM_adresseClient );
+        String telephone = getValeurChamp( request, PARAM_telephoneClient );
+        String email = getValeurChamp( request, PARAM_emailClient );
         Client client = new Client();
+
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
         Map<String, Client> listeClient = new HashMap<String, Client>();
@@ -47,38 +58,121 @@ public class CreationClientForm {
             }
         }
 
-        try {
-            validationNom( nom, listeClient );
-        } catch ( Exception e ) {
-            setErreur( PARAM_nomClient, e.getMessage() );
-        }
-        client.setNom( nom );
-        try {
-            validationPrenom( prenom );
-        } catch ( Exception e ) {
-            setErreur( PARAM_prenomClient, e.getMessage() );
-        }
-        client.setPrenom( prenom );
-        try {
-            validationAdresse( adresse );
-        } catch ( Exception e ) {
-            setErreur( PARAM_adresseClient, e.getMessage() );
-        }
-        client.setAdress( adresse );
+        String nomFichier = null;
+        InputStream contenuFichier = null;
 
         try {
-            validationTelephone( telephone );
-        } catch ( Exception e ) {
-            setErreur( PARAM_telephoneClient, e.getMessage() );
-        }
-        client.setPhone( telephone );
+            Part part = request.getPart( CHAMP_FICHIER );
+            /*
+             * Il faut déterminer s'il s'agit bien d'un champ de type fichier :
+             * on délègue cette opération à la méthode utilitaire
+             * getNomFichier().
+             */
+            nomFichier = getNomFichier( part );
 
-        try {
-            validationEmail( email );
-        } catch ( Exception e ) {
-            setErreur( PARAM_emailClient, e.getMessage() );
+            /*
+             * Si la méthode a renvoyé quelque chose, il s'agit donc d'un champ
+             * de type fichier (input type="file").
+             */
+            if ( nomFichier != null && !nomFichier.isEmpty() ) {
+                /*
+                 * Antibug pour Internet Explorer, qui transmet pour une raison
+                 * mystique le chemin du fichier local à la machine du client...
+                 * 
+                 * Ex : C:/dossier/sous-dossier/fichier.ext
+                 * 
+                 * On doit donc faire en sorte de ne sélectionner que le nom et
+                 * l'extension du fichier, et de se débarrasser du superflu.
+                 */
+                nomFichier = nomFichier.substring( nomFichier.lastIndexOf( '/' ) + 1 )
+                        .substring( nomFichier.lastIndexOf( '\\' ) + 1 );
+
+                /* Récupération du contenu du fichier */
+                contenuFichier = part.getInputStream();
+
+            }
+        } catch ( IllegalStateException e ) {
+            /*
+             * Exception retournée si la taille des données dépasse les limites
+             * définies dans la section <multipart-config> de la déclaration de
+             * notre servlet d'upload dans le fichier web.xml
+             */
+            e.printStackTrace();
+            setErreur( CHAMP_FICHIER, "Les données envoyées sont trop volumineuses." );
+        } catch ( IOException e ) {
+            /*
+             * Exception retournée si une erreur au niveau des répertoires de
+             * stockage survient (répertoire inexistant, droits d'accès
+             * insuffisants, etc.)
+             */
+            e.printStackTrace();
+            setErreur( CHAMP_FICHIER, "Erreur de configuration du serveur." );
+        } catch ( ServletException e ) {
+            /*
+             * Exception retournée si la requête n'est pas de type
+             * multipart/form-data. Cela ne peut arriver que si l'utilisateur
+             * essaie de contacter la servlet d'upload par un formulaire
+             * différent de celui qu'on lui propose... pirate ! :|
+             */
+            e.printStackTrace();
+            setErreur( CHAMP_FICHIER,
+                    "Ce type de requête n'est pas supporté, merci d'utiliser le formulaire prévu pour envoyer votre fichier." );
         }
-        client.setMail( email );
+
+        /* Si aucune erreur n'est survenue jusqu'à présent */
+        if ( erreurs.isEmpty() ) {
+
+            try {
+                validationNom( nom, listeClient );
+            } catch ( Exception e ) {
+                setErreur( PARAM_nomClient, e.getMessage() );
+            }
+            client.setNom( nom );
+            try {
+                validationPrenom( prenom );
+            } catch ( Exception e ) {
+                setErreur( PARAM_prenomClient, e.getMessage() );
+            }
+            client.setPrenom( prenom );
+            try {
+                validationAdresse( adresse );
+            } catch ( Exception e ) {
+                setErreur( PARAM_adresseClient, e.getMessage() );
+            }
+            client.setAdress( adresse );
+
+            try {
+                validationTelephone( telephone );
+            } catch ( Exception e ) {
+                setErreur( PARAM_telephoneClient, e.getMessage() );
+            }
+            client.setPhone( telephone );
+
+            try {
+                validationEmail( email );
+            } catch ( Exception e ) {
+                setErreur( PARAM_emailClient, e.getMessage() );
+            }
+            client.setMail( email );
+
+            /* Validation du champ fichier. */
+            try {
+                validationFichier( nomFichier, contenuFichier );
+            } catch ( Exception e ) {
+                setErreur( CHAMP_FICHIER, e.getMessage() );
+            }
+            client.setImage( nomFichier );
+        }
+
+        /* Si aucune erreur n'est survenue jusqu'à présent */
+        if ( erreurs.isEmpty() ) {
+            /* Écriture du fichier sur le disque */
+            try {
+                ecrireFichier( contenuFichier, nomFichier, chemin );
+            } catch ( Exception e ) {
+                setErreur( CHAMP_FICHIER, "Erreur lors de l'écriture du fichier sur le disque." );
+            }
+        }
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de l'inscription.";
@@ -99,6 +193,15 @@ public class CreationClientForm {
             if ( !email.matches( "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)" ) ) {
                 throw new Exception( "Merci de saisir une adresse mail valide." );
             }
+        }
+    }
+
+    /*
+     * Valide le fichier envoyé.
+     */
+    private void validationFichier( String nomFichier, InputStream contenuFichier ) throws Exception {
+        if ( nomFichier != null && contenuFichier == null ) {
+            throw new Exception( "Merci de sélectionner un fichier à envoyer." );
         }
     }
 
@@ -155,6 +258,57 @@ public class CreationClientForm {
             return null;
         } else {
             return valeur.trim();
+        }
+    }
+
+    private static String getNomFichier( Part part ) {
+        /* Boucle sur chacun des paramètres de l'en-tête "content-disposition". */
+        for ( String contentDisposition : part.getHeader( "content-disposition" ).split( ";" ) ) {
+            /* Recherche de l'éventuelle présence du paramètre "filename". */
+            if ( contentDisposition.trim().startsWith( "filename" ) ) {
+                /*
+                 * Si "filename" est présent, alors renvoi de sa valeur,
+                 * c'est-à-dire du nom de fichier sans guillemets.
+                 */
+                return contentDisposition.substring( contentDisposition.indexOf( '=' ) + 1 ).trim().replace( "\"", "" );
+            }
+        }
+        /* Et pour terminer, si rien n'a été trouvé... */
+        return null;
+    }
+
+    /*
+     * Méthode utilitaire qui a pour but d'écrire le fichier passé en paramètre
+     * sur le disque, dans le répertoire donné et avec le nom donné.
+     */
+    private void ecrireFichier( InputStream contenu, String nomFichier, String chemin ) throws Exception {
+        /* Prépare les flux. */
+        BufferedInputStream entree = null;
+        BufferedOutputStream sortie = null;
+        try {
+            /* Ouvre les flux. */
+            entree = new BufferedInputStream( contenu, TAILLE_TAMPON );
+            sortie = new BufferedOutputStream( new FileOutputStream( new File( chemin + nomFichier ) ),
+                    TAILLE_TAMPON );
+
+            /*
+             * Lit le fichier reçu et écrit son contenu dans un fichier sur le
+             * disque.
+             */
+            byte[] tampon = new byte[TAILLE_TAMPON];
+            int longueur = 0;
+            while ( ( longueur = entree.read( tampon ) ) > 0 ) {
+                sortie.write( tampon, 0, longueur );
+            }
+        } finally {
+            try {
+                sortie.close();
+            } catch ( IOException ignore ) {
+            }
+            try {
+                entree.close();
+            } catch ( IOException ignore ) {
+            }
         }
     }
 

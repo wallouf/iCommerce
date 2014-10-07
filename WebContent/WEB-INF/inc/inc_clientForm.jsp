@@ -28,8 +28,8 @@
     <span class="erreur"><c:out value="${form.erreurs['emailClient']}" /></span>
     <br />
      
-    <label for="imageClient">Adresse email</label>
-    <input type="email" id="emailClient" name="emailClient" value="<c:out value="${client.mail }" />" size="20" maxlength="60" />
-    <span class="erreur"><c:out value="${form.erreurs['emailClient']}" /></span>
+    <label for="fichier">Image</label>
+    <input type="file" id="fichier" name="fichier" value="<c:out value="${fichier.nom}"/>" />
+    <span class="erreur">${form.erreurs['fichier']}</span>
     <br />
 </fieldset>

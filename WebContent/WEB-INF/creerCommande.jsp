@@ -10,7 +10,7 @@
     <body>
        	<c:import url="inc/menu.jsp" />
         <div>
-            <form method="post" action="<c:url value="creationCommande" />">
+            <form method="post" action="<c:url value="creationCommande" />" enctype="multipart/form-data">
                 <fieldset>
                     <legend>Voulez-vous créer un nouveau client ?</legend>
 	            	<div class="radio">

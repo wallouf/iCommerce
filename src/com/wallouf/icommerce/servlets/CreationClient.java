@@ -18,6 +18,7 @@ import com.wallouf.icommerce.forms.CreationClientForm;
 public class CreationClient extends HttpServlet {
 
     private static final String ATT_client       = "client";
+    public static final String  CHEMIN           = "chemin";
     private static final String ATT_clientForm   = "form";
     private static final String vueForm          = "/WEB-INF/creerClient.jsp";
     private static final String vueAfficher      = "/WEB-INF/afficherClient.jsp";
@@ -50,10 +51,11 @@ public class CreationClient extends HttpServlet {
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
             IOException {
         // TODO Auto-generated method stub
+        String chemin = this.getServletConfig().getInitParameter( CHEMIN );
 
         CreationClientForm clientForm = new CreationClientForm();
 
-        Client nouveauClient = clientForm.creerClient( request );
+        Client nouveauClient = clientForm.creerClient( request, chemin );
 
         request.setAttribute( ATT_client, nouveauClient );
         request.setAttribute( ATT_clientForm, clientForm );

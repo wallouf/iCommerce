@@ -6,6 +6,7 @@ public class Client {
     private String adress;
     private String mail;
     private String phone;
+    private String image;
 
     public Client() {
         super();
@@ -19,6 +20,14 @@ public class Client {
         this.adress = adress;
         this.mail = mail;
         this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage( String image ) {
+        this.image = image;
     }
 
     public String getNom() {
