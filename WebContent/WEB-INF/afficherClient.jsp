@@ -17,6 +17,10 @@
 		<li>Adresse : <c:out value="${client.adress }" /></li>
 		<li>Courriel : <c:out value="${client.mail }" /></li>
 		<li>Telephone : <c:out value="${client.phone }" /></li>
+		<li>Telephone : <c:out value="${client.phone }" /></li>
+		<c:if test="${!empty client.image }">
+			<li><a href='<c:url value="/images/${client.image }" />'>Voir image</a></li>
+		</c:if>
 	</ul>
 
 </body>

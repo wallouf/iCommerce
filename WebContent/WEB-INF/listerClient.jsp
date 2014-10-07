@@ -36,7 +36,7 @@
 						<td><c:out value="${liste.value.mail }" /></td>
 						<c:choose>
 							<c:when test="${!empty liste.value.image }">
-								<td><a href='<c:url value="/fichiers/${liste.value.image }" />'>Link</a></td>
+								<td><a href='<c:url value="/images/${liste.value.image }" />'>Voir image</a></td>
 							</c:when>
 							<c:otherwise><td>No image available.</td></c:otherwise>
 						</c:choose>

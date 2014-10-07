@@ -17,6 +17,9 @@
 		<li>Adresse : <c:out value="${commande.client.adress }" /></li>
 		<li>Courriel : <c:out value="${commande.client.mail }" /></li>
 		<li>Telephone : <c:out value="${commande.client.phone }" /></li>
+		<c:if test="${!empty client.image }">
+			<li><a href='<c:url value="/images/${commande.client.image }" />'>Voir image</a></li>
+		</c:if>
 	</ul>
 	
 	<p>Données du commande :</p>

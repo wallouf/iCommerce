@@ -24,8 +24,8 @@
 		</init-param>
 		<multipart-config>
 			<location>/Users/wallouf/Documents/DEV/fileTemp</location>
-			<max-file-size>1048576</max-file-size> <!-- 1 Mo -->
-			<max-request-size>52428800</max-request-size> <!-- 5 x 10 Mo -->
+			<max-file-size>2097152</max-file-size> <!-- 2 Mo -->
+			<max-request-size>5242880</max-request-size> <!-- 5 x 1 Mo -->
 			<file-size-threshold>1048576</file-size-threshold> <!-- 1 Mo -->
 		</multipart-config>
   </servlet>
@@ -42,8 +42,8 @@
 		</init-param>
 		<multipart-config>
 			<location>/Users/wallouf/Documents/DEV/fileTemp</location>
-			<max-file-size>1048576</max-file-size> <!-- 1 Mo -->
-			<max-request-size>52428800</max-request-size> <!-- 5 x 10 Mo -->
+			<max-file-size>2097152</max-file-size> <!-- 2 Mo -->
+			<max-request-size>5242880</max-request-size> <!-- 5 x 10 Mo -->
 			<file-size-threshold>1048576</file-size-threshold> <!-- 1 Mo -->
 		</multipart-config>
   </servlet>
@@ -94,6 +94,18 @@
   <servlet-mapping>
     <servlet-name>Download</servlet-name>
     <url-pattern>/fichiers/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ShowImage</servlet-name>
+    <servlet-class>com.wallouf.icommerce.servlets.ShowImage</servlet-class>
+	<init-param>
+		<param-name>chemin</param-name> 
+		<param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value> 
+	</init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowImage</servlet-name>
+    <url-pattern>/images/*</url-pattern>
   </servlet-mapping>
   
   <filter>

@@ -11,6 +11,8 @@ import com.wallouf.icommerce.beans.Commande;
 
 public class CreationCommandeForm {
 
+    private static final String PARAM_nomClient               = "nomClient";
+    private static final String PARAM_nomClientErreur         = "Merci de saisir un autre nom, car ce compte existe déjà.";
     public static final String  PARAM_clientType              = "optionsRadios";
     public static final String  PARAM_clientName              = "clientExistant";
     public static final String  PARAM_listeCommande           = "listeCommande";
@@ -143,6 +145,22 @@ public class CreationCommandeForm {
             session.setAttribute( PARAM_listeCommande, listeCommande );
         } else {
             message = "Échec de la création de la commande.";
+            // suppression du client cree
+            Map<String, Client> listeClient = new HashMap<String, Client>();
+            if ( session.getAttribute( PARAM_listeClient ) != null ) {
+                try {
+                    listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
+                } catch ( Exception e ) {
+                }
+            }
+            String nomTemp = commande.getClient().getNom();
+            if ( ( !erreurs.containsKey( PARAM_nomClient ) || !erreurs.get( PARAM_nomClient ).equalsIgnoreCase(
+                    PARAM_nomClientErreur ) )
+                    && !listeClient.isEmpty()
+                    && listeClient.containsKey( nomTemp ) ) {
+                listeClient.remove( nomTemp );
+            }
+            session.setAttribute( PARAM_listeClient, listeClient );
         }
         return commande;
     }
