@@ -27,4 +27,9 @@
     <input type="email" id="emailClient" name="emailClient" value="<c:out value="${client.mail }" />" size="20" maxlength="60" />
     <span class="erreur"><c:out value="${form.erreurs['emailClient']}" /></span>
     <br />
+     
+    <label for="imageClient">Adresse email</label>
+    <input type="email" id="emailClient" name="emailClient" value="<c:out value="${client.mail }" />" size="20" maxlength="60" />
+    <span class="erreur"><c:out value="${form.erreurs['emailClient']}" /></span>
+    <br />
 </fieldset>
