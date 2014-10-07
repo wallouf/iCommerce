@@ -11,15 +11,23 @@ import com.wallouf.icommerce.beans.Commande;
 
 public class CreationCommandeForm {
 
+    public static final String  PARAM_clientType              = "optionsRadios";
+    public static final String  PARAM_clientName              = "clientExistant";
     public static final String  PARAM_listeCommande           = "listeCommande";
+    public static final String  PARAM_listeClient             = "listeClient";
     private static final String PARAM_modePaiementCommande    = "modePaiementCommande";
     private static final String PARAM_statutPaiementCommande  = "statutPaiementCommande";
     private static final String PARAM_modeLivraisonCommande   = "modeLivraisonCommande";
     private static final String PARAM_statutLivraisonCommande = "statutLivraisonCommande";
     private static final String PARAM_montantCommande         = "montantCommande";
 
+    private String              clientType;
     private String              message;
     private Map<String, String> erreurs                       = new HashMap<String, String>();
+
+    public String getclientType() {
+        return clientType;
+    }
 
     public String getMessage() {
         return message;
@@ -53,21 +61,37 @@ public class CreationCommandeForm {
         /**
          * Creation des variables
          */
+        clientType = request.getParameter( PARAM_clientType );
+        String clientExistant = request.getParameter( PARAM_clientName );
         String modePaiementCommande = request.getParameter( PARAM_modePaiementCommande );
         String statutPaiementCommande = request.getParameter( PARAM_statutPaiementCommande );
         String modeLivraisonCommande = request.getParameter( PARAM_modeLivraisonCommande );
         String statutLivraisonCommande = request.getParameter( PARAM_statutLivraisonCommande );
         String montantCommande = request.getParameter( PARAM_montantCommande );
         Commande commande = new Commande();
-        CreationClientForm clientForm = new CreationClientForm();
-
-        Client nouveauClient = clientForm.creerClient( request );
-
-        erreurs = clientForm.getErreurs();
-        commande.setClient( nouveauClient );
-
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
+
+        if ( clientType != null && clientType.equalsIgnoreCase( "nouveau" ) ) {
+            // creation dun client
+            CreationClientForm clientForm = new CreationClientForm();
+            Client nouveauClient = clientForm.creerClient( request );
+            erreurs = clientForm.getErreurs();
+            commande.setClient( nouveauClient );
+        } else if ( clientType != null && clientType.equalsIgnoreCase( "existant" ) ) {
+            Map<String, Client> listeClient = new HashMap<String, Client>();
+            if ( session.getAttribute( PARAM_listeClient ) != null ) {
+                try {
+                    listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
+                } catch ( Exception e ) {
+                }
+            }
+            if ( !listeClient.isEmpty() && listeClient.containsKey( clientExistant ) ) {
+                commande.setClient( listeClient.get( clientExistant ) );
+            } else {
+                setErreur( PARAM_clientName, "Impossible de retrouver le client. Veuillez reessayer." );
+            }
+        }
 
         Map<String, Commande> listeCommande = new HashMap<String, Commande>();
         if ( session.getAttribute( PARAM_listeCommande ) != null ) {

@@ -5,17 +5,46 @@
         <meta charset="utf-8" />
         <title>Création d'une commande</title>
         <link type="text/css" rel="stylesheet" href="<c:url value="inc/style.css" />" />
+        <script src="<c:url value="inc/jquery-1.11.1.min.js" />"></script>
     </head>
     <body>
        	<c:import url="inc/menu.jsp" />
         <div>
-            <form method="post" action="<c:url value="creationCommande" />"><%-- Petite astuce ici : placer le client accessible via 
-                 l'EL ${ commande.client } dans une variable "client" de
-                 portée request, pour que le code du fragment fonctionne
-                 à la fois depuis le formulaire de création d'un client
-                 et depuis celui de création d'une commande. --%>
+            <form method="post" action="<c:url value="creationCommande" />">
+                <fieldset>
+                    <legend>Voulez-vous créer un nouveau client ?</legend>
+	            	<div class="radio">
+					  <label>
+					    <input type="radio" name="optionsRadios" id="optionsRadios1" value="nouveau" onClick="displayAndHideForms('#optionBloc_nouveauClient','#optionBloc_existant');" <c:if test="${(!empty form.clientType) && (form.clientType == 'nouveau') }">checked</c:if>>
+					    Oui
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="optionsRadios" id="optionsRadios2" value="existant"  onClick="displayAndHideForms('#optionBloc_existant','#optionBloc_nouveauClient');" <c:if test="${(!empty form.clientType) && (form.clientType == 'existant') }">checked</c:if>>
+					    Non
+					  </label>
+					</div>
+                </fieldset>
+            
                 <c:set var="client" value="${ commande.client }" scope="request" />
-            	<c:import url="inc/inc_clientForm.jsp" />
+                <div id="optionBloc_nouveauClient" <c:if test="${(empty form.clientType) || (form.clientType != 'nouveau') }">style="display:none;"</c:if>>
+            		<c:import url="inc/inc_clientForm.jsp" />
+            	</div>
+                <div id="optionBloc_existant"  <c:if test="${(empty form.clientType) || (form.clientType != 'existant') }">style="display:none;"</c:if>>
+	                <fieldset>
+	                    <legend>Liste des clients existant:</legend>
+	            		<select id="clientExistant" name="clientExistant">
+	            			<c:if test="${!empty sessionScope.listeClient }">
+								<c:forEach items="${sessionScope.listeClient }" varStatus="status" var="liste">
+	            					<option value='<c:out value="${liste.value.nom  }" />'  <c:if test="${(!empty client.nom) && (client.nom == liste.value.nom) }">selected</c:if>><c:out value="${liste.value.nom } - ${liste.value.prenom }" /></option>
+	            				</c:forEach>
+	            			</c:if>
+	            		</select>
+	            		<span class="erreur"><c:out value="${form.erreurs['clientExistant']}" /></span>
+                    	<br />
+               		</fieldset>
+            	</div>
                 <fieldset>
                     <legend>Informations commande</legend>
                      
@@ -55,3 +84,9 @@
         </div>
     </body>
 </html>
+<script>
+	function displayAndHideForms( idToDisplay , idToHide){
+		$(idToDisplay).show();
+		$(idToHide).hide();
+	}
+</script>
