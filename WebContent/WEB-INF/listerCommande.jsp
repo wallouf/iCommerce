@@ -22,10 +22,12 @@
 					<th>Statut de paiement</th>
 					<th>Mode de livraison</th>
 					<th>Statut de livraison</th>
+					<th>?</th>
 				</tr>
 			</thead>
 			<tbody>
 			<c:forEach items="${sessionScope.listeCommande }" varStatus="status" var="liste">
+				<c:if test="${!empty liste.value }">
 				<tr>
 					<td><c:out value="${liste.key }" /></td>
 					<td><c:out value="${liste.value.client.nom }" /></td>
@@ -35,7 +37,9 @@
 					<td><c:out value="${liste.value.statutDePaiement }" /></td>
 					<td><c:out value="${liste.value.modeDeLivraison }" /></td>
 					<td><c:out value="${liste.value.statutDeLivraison }" /></td>
+					<td><a href='<c:url value="supprimerCommande" ><c:param name="indexCommande" value="${liste.key }"/></c:url>'>Supprimer ?</a></td>
 				</tr>
+				</c:if>
 			</c:forEach>
 			</tbody>
 		</table>

@@ -47,16 +47,33 @@
     <servlet-name>ListerClient</servlet-name>
     <url-pattern>/listerClient</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SupprimerClient</servlet-name>
+    <servlet-class>com.wallouf.icommerce.servlets.SupprimerClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SupprimerClient</servlet-name>
+    <url-pattern>/supprimerClient</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SupprimerCommande</servlet-name>
+    <servlet-class>com.wallouf.icommerce.servlets.SupprimerCommande</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SupprimerCommande</servlet-name>
+    <url-pattern>/supprimerCommande</url-pattern>
+  </servlet-mapping>
+  
   <filter>
     <filter-name>Set Character Encoding</filter-name>
     <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
     <init-param>
-    	<param-name>encoding</param-name>
-    	<param-value>UTF-8</param-value>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
     </init-param>
     <init-param>
-    	<param-name>ignore</param-name>
-    	<param-value>false</param-value>
+      <param-name>ignore</param-name>
+      <param-value>false</param-value>
     </init-param>
   </filter>
   <filter-mapping>

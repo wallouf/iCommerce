@@ -13,10 +13,19 @@
 		<c:when test="${!empty sessionScope.listeClient }">
 		<table>
 			<thead>
-				<tr><th>Index</th><th>Nom</th><th>Prenom</th><th>Adresse</th><th>Telephone</th><th>Email</th></tr>
+				<tr>
+					<th>Index</th>
+					<th>Nom</th>
+					<th>Prenom</th>
+					<th>Adresse</th>
+					<th>Telephone</th>
+					<th>Email</th>
+					<th>?</th>
+				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${sessionScope.listeClient }" varStatus="status" var="liste">
+					<c:if test="${!empty liste.value }">
 					<tr>
 						<td><c:out value="${status.index }" /></td>
 						<td><c:out value="${liste.value.nom }" /></td>
@@ -24,7 +33,9 @@
 						<td><c:out value="${liste.value.adress }" /></td>
 						<td><c:out value="${liste.value.phone }" /></td>
 						<td><c:out value="${liste.value.mail }" /></td>
+						<td><a href='<c:url value="supprimerClient" ><c:param name="nomClient" value="${liste.value.nom }"/></c:url>'>Supprimer ?</a></td>
 					</tr>
+					</c:if>
 				</c:forEach>
 			</tbody>
 		</table>

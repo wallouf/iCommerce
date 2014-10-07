@@ -139,7 +139,7 @@ public class CreationCommandeForm {
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de la création de la commande.";
-            listeCommande.put( "" + listeCommande.size(), commande );
+            listeCommande.put( "" + Math.random(), commande );
             session.setAttribute( PARAM_listeCommande, listeCommande );
         } else {
             message = "Échec de la création de la commande.";
