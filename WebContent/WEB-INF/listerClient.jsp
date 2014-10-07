@@ -20,6 +20,7 @@
 					<th>Adresse</th>
 					<th>Telephone</th>
 					<th>Email</th>
+					<th>Image</th>
 					<th>?</th>
 				</tr>
 			</thead>
@@ -33,6 +34,12 @@
 						<td><c:out value="${liste.value.adress }" /></td>
 						<td><c:out value="${liste.value.phone }" /></td>
 						<td><c:out value="${liste.value.mail }" /></td>
+						<c:choose>
+							<c:when test="${!empty liste.value.image }">
+								<td><a href='<c:url value="/fichiers/${liste.value.image }" />'>Link</a></td>
+							</c:when>
+							<c:otherwise><td>No image available.</td></c:otherwise>
+						</c:choose>
 						<td><a href='<c:url value="supprimerClient" ><c:param name="nomClient" value="${liste.value.nom }"/></c:url>'>Supprimer ?</a></td>
 					</tr>
 					</c:if>
