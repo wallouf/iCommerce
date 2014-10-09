@@ -19,7 +19,7 @@ public class CommandeDaoImpl implements CommandeDao {
 
     public CommandeDaoImpl( DAOFactory daoFactory ) {
         this.daoFactory = daoFactory;
-        // TODO Auto-generated constructor stub
+        // TODO Auto-generated co4gnstructor stub
     }
 
     /*

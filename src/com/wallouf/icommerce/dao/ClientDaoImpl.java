@@ -72,7 +72,6 @@ public class ClientDaoImpl implements ClientDao {
         } finally {
             fermeturesSilencieuses( valeursAutoGenerees, preparedStatement, connexion );
         }
-
     }
 
     @Override
