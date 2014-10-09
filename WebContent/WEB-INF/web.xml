@@ -15,6 +15,9 @@
       <include-prelude>/WEB-INF/taglibs.jsp</include-prelude>
     </jsp-property-group>
   </jsp-config>
+  	<listener>
+    	<listener-class>com.wallouf.icommerce.config.InitialisationDaoFactory</listener-class>
+    </listener>
   <servlet>
     <servlet-name>CreationClient</servlet-name>
     <servlet-class>com.wallouf.icommerce.servlets.CreationClient</servlet-class>

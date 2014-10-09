@@ -1,24 +1,20 @@
 package com.wallouf.icommerce.beans;
 
-import org.joda.time.DateTime;
+import java.sql.Timestamp;
 
 public class Commande {
-    private Client client;
-    private String modeDePaiement;
-    private String statutDePaiement;
-    private String modeDeLivraison;
-    private String statutDeLivraison;
 
-    private String dateCommande;
-    private double montant;
+    private Long      id;
+    private Client    client;
+    private String    modeDePaiement;
+    private String    statutDePaiement;
+    private String    modeDeLivraison;
+    private String    statutDeLivraison;
+    private Timestamp date;
+    private double    montant;
 
     public Commande() {
         super();
-        /**
-         * Get today date.
-         */
-        DateTime dt = new DateTime();
-        this.dateCommande = dt.getDayOfMonth() + "/" + dt.getMonthOfYear() + "/" + dt.getYear();
     }
 
     public Commande( Client client, String modeDePaiement,
@@ -31,11 +27,22 @@ public class Commande {
         this.modeDeLivraison = modeDeLivraison;
         this.statutDeLivraison = statutDeLivraison;
         this.montant = montant;
-        /**
-         * Get today date.
-         */
-        DateTime dt = new DateTime();
-        this.dateCommande = dt.getDayOfMonth() + "/" + dt.getMonthOfYear() + "/" + dt.getYear();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId( Long id ) {
+        this.id = id;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate( Timestamp date ) {
+        this.date = date;
     }
 
     public Client getClient() {
@@ -76,14 +83,6 @@ public class Commande {
 
     public void setStatutDeLivraison( String statutDeLivraison ) {
         this.statutDeLivraison = statutDeLivraison;
-    }
-
-    public String getDateCommande() {
-        return dateCommande;
-    }
-
-    public void setDateCommande( String dateCommande ) {
-        this.dateCommande = dateCommande;
     }
 
     public double getMontant() {

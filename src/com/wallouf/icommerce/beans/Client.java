@@ -1,25 +1,36 @@
 package com.wallouf.icommerce.beans;
 
+
 public class Client {
+
+    private Long   id;
     private String nom;
     private String prenom;
-    private String adress;
-    private String mail;
-    private String phone;
+    private String adresse;
+    private String email;
+    private String telephone;
     private String image;
 
     public Client() {
         super();
     }
 
-    public Client( String nom, String prenom, String adress, String mail,
-            String phone ) {
+    public Client( String nom, String prenom, String adresse, String email,
+            String telephone ) {
         super();
         this.nom = nom;
         this.prenom = prenom;
-        this.adress = adress;
-        this.mail = mail;
-        this.phone = phone;
+        this.adresse = adresse;
+        this.email = email;
+        this.telephone = telephone;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId( Long id ) {
+        this.id = id;
     }
 
     public String getImage() {
@@ -46,28 +57,28 @@ public class Client {
         this.prenom = prenom;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAdresse() {
+        return adresse;
     }
 
-    public void setAdress( String adress ) {
-        this.adress = adress;
+    public void setAdresse( String adresse ) {
+        this.adresse = adresse;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail( String mail ) {
-        this.mail = mail;
+    public void setEmail( String email ) {
+        this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setPhone( String phone ) {
-        this.phone = phone;
+    public void setTelephone( String telephone ) {
+        this.telephone = telephone;
     }
 
 }
