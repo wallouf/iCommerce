@@ -38,7 +38,7 @@
 	            			<c:if test="${!empty sessionScope.listeClient }">
 								<c:forEach items="${sessionScope.listeClient }" varStatus="status" var="liste">
 									<c:if test="${!empty liste.value }">
-	            						<option value='<c:out value="${liste.value.id  }" />'  <c:if test="${(!empty client.nom) && (client.nom == liste.value.nom) }">selected</c:if>><c:out value="${liste.value.nom } - ${liste.value.prenom }" /></option>
+	            						<option value='<c:out value="${liste.value.id  }" />'  <c:if test="${(!empty client.nom) && (client.nom == liste.value.nom) }">selected</c:if>><c:out value="${liste.value.id } - ${liste.value.nom } - ${liste.value.prenom }" /></option>
 	            					</c:if>
 	            				</c:forEach>
 	            			</c:if>
