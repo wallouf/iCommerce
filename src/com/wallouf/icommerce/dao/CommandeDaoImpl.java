@@ -5,6 +5,10 @@ import static com.wallouf.icommerce.dao.DAOUtilitaire.initialisationRequetePrepa
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.DateTime;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -19,7 +23,6 @@ public class CommandeDaoImpl implements CommandeDao {
 
     public CommandeDaoImpl( DAOFactory daoFactory ) {
         this.daoFactory = daoFactory;
-        // TODO Auto-generated co4gnstructor stub
     }
 
     /*
@@ -36,7 +39,7 @@ public class CommandeDaoImpl implements CommandeDao {
         commande.setStatutDeLivraison( resultSet.getString( "statut_livraison" ) );
         commande.setModeDePaiement( resultSet.getString( "statut_paiement" ) );
         commande.setMontant( resultSet.getDouble( "montant" ) );
-        commande.setDate( resultSet.getTimestamp( "date" ) );
+        commande.setDate( new DateTime( resultSet.getTimestamp( "date" ) ) );
         return commande;
     }
 
@@ -109,15 +112,55 @@ public class CommandeDaoImpl implements CommandeDao {
     }
 
     @Override
-    public Commande lister() throws DAOException {
+    public List<Commande> lister() throws DAOException {
         // TODO Auto-generated method stub
-        return null;
+        // TODO Auto-generated method stub
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Commande> listeCommande = new ArrayList<Commande>();
+
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = (Connection) daoFactory.getConnection();
+            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion,
+                    SQL_SELECT,
+                    false );
+            resultSet = preparedStatement.executeQuery();
+            /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
+            while ( resultSet.next() ) {
+                listeCommande.add( map( resultSet ) );
+            }
+        } catch ( SQLException e ) {
+            throw new DAOException( e );
+        } finally {
+            fermeturesSilencieuses( resultSet, preparedStatement, connexion );
+        }
+
+        return listeCommande;
     }
 
     @Override
     public void supprimer( Commande commande ) throws DAOException {
         // TODO Auto-generated method stub
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = (Connection) daoFactory.getConnection();
+            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_DELETE_PAR_ID, true,
+                    commande.getId() );
+            int statut = preparedStatement.executeUpdate();
+            /* Analyse du statut retourné par la requête d'insertion */
+            if ( statut == 0 ) {
+                throw new DAOException( "Échec de la suppression de l'utilisateur." );
+            }
+        } catch ( SQLException e ) {
+            throw new DAOException( e );
+        } finally {
+            fermeturesSilencieuses( preparedStatement, connexion );
+        }
     }
 
 }

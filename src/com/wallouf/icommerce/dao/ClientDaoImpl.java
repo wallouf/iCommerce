@@ -5,6 +5,8 @@ import static com.wallouf.icommerce.dao.DAOUtilitaire.initialisationRequetePrepa
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -103,15 +105,55 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public Client lister() throws DAOException {
+    public List<Client> lister() throws DAOException {
         // TODO Auto-generated method stub
-        return null;
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Client> listeClient = new ArrayList<Client>();
+
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = (Connection) daoFactory.getConnection();
+            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion,
+                    SQL_SELECT,
+                    false );
+            resultSet = preparedStatement.executeQuery();
+            /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
+            while ( resultSet.next() ) {
+                listeClient.add( map( resultSet ) );
+            }
+        } catch ( SQLException e ) {
+            throw new DAOException( e );
+        } finally {
+            fermeturesSilencieuses( resultSet, preparedStatement, connexion );
+        }
+
+        return listeClient;
     }
 
     @Override
     public void supprimer( Client client ) throws DAOException {
         // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
+        Connection connexion = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+            /* Récupération d'une connexion depuis la Factory */
+            connexion = (Connection) daoFactory.getConnection();
+            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_DELETE_PAR_ID, true,
+                    client.getId() );
+            int statut = preparedStatement.executeUpdate();
+            /* Analyse du statut retourné par la requête d'insertion */
+            if ( statut == 0 ) {
+                throw new DAOException( "Échec de la suppression de l'utilisateur." );
+            }
+        } catch ( SQLException e ) {
+            throw new DAOException( e );
+        } finally {
+            fermeturesSilencieuses( preparedStatement, connexion );
+        }
     }
 
 }

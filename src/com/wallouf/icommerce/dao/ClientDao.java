@@ -1,5 +1,7 @@
 package com.wallouf.icommerce.dao;
 
+import java.util.List;
+
 import com.wallouf.icommerce.beans.Client;
 
 public interface ClientDao {
@@ -8,7 +10,7 @@ public interface ClientDao {
 
     Client trouver( long id ) throws DAOException;
 
-    Client lister() throws DAOException;
+    List<Client> lister() throws DAOException;
 
     void supprimer( Client client ) throws DAOException;
 

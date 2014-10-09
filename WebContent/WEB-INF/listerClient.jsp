@@ -31,9 +31,9 @@
 						<td><c:out value="${status.index }" /></td>
 						<td><c:out value="${liste.value.nom }" /></td>
 						<td><c:out value="${liste.value.prenom }" /></td>
-						<td><c:out value="${liste.value.adress }" /></td>
-						<td><c:out value="${liste.value.phone }" /></td>
-						<td><c:out value="${liste.value.mail }" /></td>
+						<td><c:out value="${liste.value.adresse }" /></td>
+						<td><c:out value="${liste.value.telephone }" /></td>
+						<td><c:out value="${liste.value.email }" /></td>
 						<c:choose>
 							<c:when test="${!empty liste.value.image }">
 								<td><a href='<c:url value="/images/${liste.value.image }" />'>Voir image</a></td>

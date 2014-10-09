@@ -8,13 +8,15 @@ import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.beans.Client;
 import com.wallouf.icommerce.beans.Commande;
+import com.wallouf.icommerce.dao.ClientDao;
+import com.wallouf.icommerce.dao.CommandeDao;
 
 public class CreationCommandeForm {
 
     private static final String PARAM_nomClient               = "nomClient";
     private static final String PARAM_nomClientErreur         = "Merci de saisir un autre nom, car ce compte existe déjà.";
     public static final String  PARAM_clientType              = "optionsRadios";
-    public static final String  PARAM_clientName              = "clientExistant";
+    public static final String  PARAM_clientId                = "clientExistant";
     public static final String  PARAM_listeCommande           = "listeCommande";
     public static final String  PARAM_listeClient             = "listeClient";
     private static final String PARAM_modePaiementCommande    = "modePaiementCommande";
@@ -23,9 +25,16 @@ public class CreationCommandeForm {
     private static final String PARAM_statutLivraisonCommande = "statutLivraisonCommande";
     private static final String PARAM_montantCommande         = "montantCommande";
 
+    private CommandeDao         commandeDao;
+    private ClientDao           clientDao;
     private String              clientType;
     private String              message;
     private Map<String, String> erreurs                       = new HashMap<String, String>();
+
+    public CreationCommandeForm( CommandeDao commandeDao, ClientDao clientDao ) {
+        this.commandeDao = commandeDao;
+        this.clientDao = clientDao;
+    }
 
     public String getclientType() {
         return clientType;
@@ -64,7 +73,8 @@ public class CreationCommandeForm {
          * Creation des variables
          */
         clientType = request.getParameter( PARAM_clientType );
-        String clientExistant = request.getParameter( PARAM_clientName );
+        Long id = null;
+        Long clientExistant = Long.parseLong( request.getParameter( PARAM_clientId ) );
         String modePaiementCommande = request.getParameter( PARAM_modePaiementCommande );
         String statutPaiementCommande = request.getParameter( PARAM_statutPaiementCommande );
         String modeLivraisonCommande = request.getParameter( PARAM_modeLivraisonCommande );
@@ -76,32 +86,20 @@ public class CreationCommandeForm {
 
         if ( clientType != null && clientType.equalsIgnoreCase( "nouveau" ) ) {
             // creation dun client
-            CreationClientForm clientForm = new CreationClientForm();
+            CreationClientForm clientForm = new CreationClientForm( clientDao );
             Client nouveauClient = clientForm.creerClient( request, chemin );
             erreurs = clientForm.getErreurs();
             commande.setClient( nouveauClient );
         } else if ( clientType != null && clientType.equalsIgnoreCase( "existant" ) ) {
-            Map<String, Client> listeClient = new HashMap<String, Client>();
-            if ( session.getAttribute( PARAM_listeClient ) != null ) {
-                try {
-                    listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
-                } catch ( Exception e ) {
-                }
-            }
+            Map<Long, Client> listeClient = (Map<Long, Client>) session.getAttribute( PARAM_listeClient );
             if ( !listeClient.isEmpty() && listeClient.containsKey( clientExistant ) ) {
                 commande.setClient( listeClient.get( clientExistant ) );
             } else {
-                setErreur( PARAM_clientName, "Impossible de retrouver le client. Veuillez reessayer." );
+                setErreur( PARAM_clientId, "Impossible de retrouver le client. Veuillez reessayer." );
             }
         }
 
-        Map<String, Commande> listeCommande = new HashMap<String, Commande>();
-        if ( session.getAttribute( PARAM_listeCommande ) != null ) {
-            try {
-                listeCommande = (Map<String, Commande>) session.getAttribute( PARAM_listeCommande );
-            } catch ( Exception e ) {
-            }
-        }
+        Map<Long, Commande> listeCommande = (Map<Long, Commande>) session.getAttribute( PARAM_listeCommande );
 
         try {
             validationModePaiement( modePaiementCommande );
@@ -141,24 +139,18 @@ public class CreationCommandeForm {
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de la création de la commande.";
-            listeCommande.put( "" + Math.random(), commande );
+            listeCommande.put( id, commande );
             session.setAttribute( PARAM_listeCommande, listeCommande );
         } else {
             message = "Échec de la création de la commande.";
             // suppression du client cree
-            Map<String, Client> listeClient = new HashMap<String, Client>();
-            if ( session.getAttribute( PARAM_listeClient ) != null ) {
-                try {
-                    listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
-                } catch ( Exception e ) {
-                }
-            }
-            String nomTemp = commande.getClient().getNom();
+            Map<Long, Client> listeClient = (Map<Long, Client>) session.getAttribute( PARAM_listeClient );
+            Long clientId = commande.getClient().getId();
             if ( ( !erreurs.containsKey( PARAM_nomClient ) || !erreurs.get( PARAM_nomClient ).equalsIgnoreCase(
                     PARAM_nomClientErreur ) )
                     && !listeClient.isEmpty()
-                    && listeClient.containsKey( nomTemp ) ) {
-                listeClient.remove( nomTemp );
+                    && listeClient.containsKey( clientId ) ) {
+                listeClient.remove( clientId );
             }
             session.setAttribute( PARAM_listeClient, listeClient );
         }

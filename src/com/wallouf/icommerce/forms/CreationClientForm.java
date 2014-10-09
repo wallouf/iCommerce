@@ -12,15 +12,14 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.wallouf.icommerce.beans.Client;
+import com.wallouf.icommerce.dao.ClientDao;
 
 import eu.medsea.mimeutil.MimeUtil;
 
 public class CreationClientForm {
-    public static final String  PARAM_listeClient     = "listeClient";
     private static final String PARAM_nomClientErreur = "Merci de saisir un autre nom, car ce compte existe déjà.";
     private static final String PARAM_nomClient       = "nomClient";
     private static final String PARAM_prenomClient    = "prenomClient";
@@ -32,9 +31,14 @@ public class CreationClientForm {
 
     private String              message;
     private Map<String, String> erreurs               = new HashMap<String, String>();
+    private ClientDao           clientDao;
 
     public String getMessage() {
         return message;
+    }
+
+    public CreationClientForm( ClientDao clientDao ) {
+        this.clientDao = clientDao;
     }
 
     public Map<String, String> getErreurs() {
@@ -53,21 +57,11 @@ public class CreationClientForm {
         String image = null;
         Client client = new Client();
 
-        /* Récupération de la session depuis la requête */
-        HttpSession session = request.getSession();
-        Map<String, Client> listeClient = new HashMap<String, Client>();
-        if ( session.getAttribute( PARAM_listeClient ) != null ) {
-            try {
-                listeClient = (Map<String, Client>) session.getAttribute( PARAM_listeClient );
-            } catch ( Exception e ) {
-            }
-        }
-
         /* Si aucune erreur n'est survenue jusqu'à présent */
         if ( erreurs.isEmpty() ) {
 
             try {
-                validationNom( nom, listeClient );
+                validationNom( nom );
             } catch ( Exception e ) {
                 setErreur( PARAM_nomClient, e.getMessage() );
             }
@@ -83,21 +77,21 @@ public class CreationClientForm {
             } catch ( Exception e ) {
                 setErreur( PARAM_adresseClient, e.getMessage() );
             }
-            client.setAdress( adresse );
+            client.setAdresse( adresse );
 
             try {
                 validationTelephone( telephone );
             } catch ( Exception e ) {
                 setErreur( PARAM_telephoneClient, e.getMessage() );
             }
-            client.setPhone( telephone );
+            client.setTelephone( telephone );
 
             try {
                 validationEmail( email );
             } catch ( Exception e ) {
                 setErreur( PARAM_emailClient, e.getMessage() );
             }
-            client.setMail( email );
+            client.setEmail( email );
 
             /* Validation du champ fichier. */
             try {
@@ -113,8 +107,7 @@ public class CreationClientForm {
             /**
              * Ajout dans la session de l'utilisateur
              */
-            listeClient.put( nom, client );
-            session.setAttribute( PARAM_listeClient, listeClient );
+            clientDao.creer( client );
         } else {
             message = "Échec de l'inscription.";
         }
@@ -205,13 +198,11 @@ public class CreationClientForm {
         return nomFichier;
     }
 
-    private void validationNom( String nom, Map<String, Client> listeClient ) throws Exception {
+    private void validationNom( String nom ) throws Exception {
         if ( nom != null && nom.length() < 2 ) {
             throw new Exception( "Le nom d'utilisateur doit contenir au moins 2 caractères." );
         } else if ( nom == null ) {
             throw new Exception( "Merci de saisir un nom." );
-        } else if ( !listeClient.isEmpty() && listeClient.containsKey( nom ) ) {
-            throw new Exception( PARAM_nomClientErreur );
         }
     }
 

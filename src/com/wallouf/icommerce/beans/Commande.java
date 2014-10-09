@@ -1,17 +1,17 @@
 package com.wallouf.icommerce.beans;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
 
 public class Commande {
 
-    private Long      id;
-    private Client    client;
-    private String    modeDePaiement;
-    private String    statutDePaiement;
-    private String    modeDeLivraison;
-    private String    statutDeLivraison;
-    private Timestamp date;
-    private double    montant;
+    private Long     id;
+    private Client   client;
+    private String   modeDePaiement;
+    private String   statutDePaiement;
+    private String   modeDeLivraison;
+    private String   statutDeLivraison;
+    private DateTime date;
+    private double   montant;
 
     public Commande() {
         super();
@@ -37,11 +37,11 @@ public class Commande {
         this.id = id;
     }
 
-    public Timestamp getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate( Timestamp date ) {
+    public void setDate( DateTime date ) {
         this.date = date;
     }
 

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.wallouf.icommerce.beans.Commande;
+import com.wallouf.icommerce.dao.ClientDao;
+import com.wallouf.icommerce.dao.CommandeDao;
+import com.wallouf.icommerce.dao.DAOFactory;
 import com.wallouf.icommerce.forms.CreationCommandeForm;
 
 /**
@@ -16,6 +19,7 @@ import com.wallouf.icommerce.forms.CreationCommandeForm;
  */
 @WebServlet( "/CreationCommande" )
 public class CreationCommande extends HttpServlet {
+    public static final String  CONF_DAO_FACTORY = "daofactory";
 
     private static final String ATT_commande     = "commande";
     public static final String  CHEMIN           = "chemin";
@@ -24,6 +28,17 @@ public class CreationCommande extends HttpServlet {
     private static final String vueAfficher      = "/WEB-INF/afficherCommande.jsp";
 
     private static final long   serialVersionUID = 1L;
+
+    private CommandeDao         commandeDao;
+
+    private ClientDao           clientDao;
+
+    public void init() throws ServletException {
+        /* Récupération d'une instance de notre DAO Utilisateur */
+        this.commandeDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getCommandeDao();
+        /* Récupération d'une instance de notre DAO Utilisateur */
+        this.clientDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getClientDao();
+    }
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -52,7 +67,7 @@ public class CreationCommande extends HttpServlet {
         // TODO Auto-generated method stub
         String chemin = this.getServletConfig().getInitParameter( CHEMIN );
 
-        CreationCommandeForm commandeForm = new CreationCommandeForm();
+        CreationCommandeForm commandeForm = new CreationCommandeForm( commandeDao, clientDao );
         Commande nouvelleCommande = commandeForm.creerCommande( request, chemin );
 
         request.setAttribute( ATT_commande, nouvelleCommande );

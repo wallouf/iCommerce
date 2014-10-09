@@ -1,5 +1,7 @@
 package com.wallouf.icommerce.dao;
 
+import java.util.List;
+
 import com.wallouf.icommerce.beans.Commande;
 
 public interface CommandeDao {
@@ -8,7 +10,7 @@ public interface CommandeDao {
 
     Commande trouver( long id ) throws DAOException;
 
-    Commande lister() throws DAOException;
+    List<Commande> lister() throws DAOException;
 
     void supprimer( Commande commande ) throws DAOException;
 

@@ -14,9 +14,9 @@
 	<ul>
 		<li>Nom : <c:out value="${commande.client.nom }" /></li>
 		<li>Prenom : <c:out value="${commande.client.prenom }" /></li>
-		<li>Adresse : <c:out value="${commande.client.adress }" /></li>
-		<li>Courriel : <c:out value="${commande.client.mail }" /></li>
-		<li>Telephone : <c:out value="${commande.client.phone }" /></li>
+		<li>Adresse : <c:out value="${commande.client.adresse }" /></li>
+		<li>Courriel : <c:out value="${commande.client.email }" /></li>
+		<li>Telephone : <c:out value="${commande.client.telephone }" /></li>
 		<c:if test="${!empty client.image }">
 			<li><a href='<c:url value="/images/${commande.client.image }" />'>Voir image</a></li>
 		</c:if>
