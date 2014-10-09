@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -31,13 +32,13 @@
 				<tr>
 					<td><c:out value="${liste.key }" /></td>
 					<td><c:out value="${liste.value.client.nom }" /></td>
-					<td><c:out value="${liste.value.dateCommande }" /></td>
+					<td><joda:format value="${ commande.date }" pattern="dd/MM/yyyy HH:mm:ss"/></td>
 					<td><c:out value="${liste.value.montant }" /></td>
 					<td><c:out value="${liste.value.modeDePaiement }" /></td>
 					<td><c:out value="${liste.value.statutDePaiement }" /></td>
 					<td><c:out value="${liste.value.modeDeLivraison }" /></td>
 					<td><c:out value="${liste.value.statutDeLivraison }" /></td>
-					<td><a href='<c:url value="supprimerCommande" ><c:param name="indexCommande" value="${liste.key }"/></c:url>'>Supprimer ?</a></td>
+					<td><a href='<c:url value="supprimerCommande" ><c:param name="idCommande" value="${liste.value.id }"/></c:url>'>Supprimer ?</a></td>
 				</tr>
 				</c:if>
 			</c:forEach>

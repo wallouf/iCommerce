@@ -40,7 +40,7 @@
 							</c:when>
 							<c:otherwise><td>No image available.</td></c:otherwise>
 						</c:choose>
-						<td><a href='<c:url value="supprimerClient" ><c:param name="nomClient" value="${liste.value.nom }"/></c:url>'>Supprimer ?</a></td>
+						<td><a href='<c:url value="supprimerClient" ><c:param name="idClient" value="${liste.value.id }"/></c:url>'>Supprimer ?</a></td>
 					</tr>
 					</c:if>
 				</c:forEach>

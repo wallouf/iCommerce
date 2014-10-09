@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+import com.sun.jmx.snmp.Timestamp;
 import com.wallouf.icommerce.beans.Commande;
 
 public class CommandeDaoImpl implements CommandeDao {
@@ -55,7 +56,8 @@ public class CommandeDaoImpl implements CommandeDao {
             /* Récupération d'une connexion depuis la Factory */
             connexion = (Connection) daoFactory.getConnection();
             preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_INSERT, true,
-                    commande.getClient().getId(), commande.getDate(), commande.getMontant(),
+                    commande.getClient().getId(), new Timestamp( commande.getDate().getMillis() ),
+                    commande.getMontant(),
                     commande.getModeDePaiement(), commande.getStatutDePaiement(), commande.getModeDeLivraison(),
                     commande.getStatutDeLivraison() );
             int statut = preparedStatement.executeUpdate();

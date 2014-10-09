@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
+
 import com.wallouf.icommerce.beans.Client;
 import com.wallouf.icommerce.beans.Commande;
 import com.wallouf.icommerce.dao.ClientDao;
@@ -17,7 +19,6 @@ public class CreationCommandeForm {
     private static final String PARAM_nomClientErreur         = "Merci de saisir un autre nom, car ce compte existe déjà.";
     public static final String  PARAM_clientType              = "optionsRadios";
     public static final String  PARAM_clientId                = "clientExistant";
-    public static final String  PARAM_listeCommande           = "listeCommande";
     public static final String  PARAM_listeClient             = "listeClient";
     private static final String PARAM_modePaiementCommande    = "modePaiementCommande";
     private static final String PARAM_statutPaiementCommande  = "statutPaiementCommande";
@@ -73,14 +74,15 @@ public class CreationCommandeForm {
          * Creation des variables
          */
         clientType = request.getParameter( PARAM_clientType );
-        Long id = null;
         Long clientExistant = Long.parseLong( request.getParameter( PARAM_clientId ) );
         String modePaiementCommande = request.getParameter( PARAM_modePaiementCommande );
         String statutPaiementCommande = request.getParameter( PARAM_statutPaiementCommande );
         String modeLivraisonCommande = request.getParameter( PARAM_modeLivraisonCommande );
         String statutLivraisonCommande = request.getParameter( PARAM_statutLivraisonCommande );
         String montantCommande = request.getParameter( PARAM_montantCommande );
+        DateTime dt = new DateTime();
         Commande commande = new Commande();
+        commande.setDate( dt );
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
 
@@ -98,8 +100,6 @@ public class CreationCommandeForm {
                 setErreur( PARAM_clientId, "Impossible de retrouver le client. Veuillez reessayer." );
             }
         }
-
-        Map<Long, Commande> listeCommande = (Map<Long, Commande>) session.getAttribute( PARAM_listeCommande );
 
         try {
             validationModePaiement( modePaiementCommande );
@@ -139,8 +139,7 @@ public class CreationCommandeForm {
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de la création de la commande.";
-            listeCommande.put( id, commande );
-            session.setAttribute( PARAM_listeCommande, listeCommande );
+            commandeDao.creer( commande );
         } else {
             message = "Échec de la création de la commande.";
             // suppression du client cree
