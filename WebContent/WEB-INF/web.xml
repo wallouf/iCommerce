@@ -15,22 +15,46 @@
       <include-prelude>/WEB-INF/taglibs.jsp</include-prelude>
     </jsp-property-group>
   </jsp-config>
-  	<listener>
-    	<listener-class>com.wallouf.icommerce.config.InitialisationDaoFactory</listener-class>
-    </listener>
+  <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ignore</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>PrechargementFilter</filter-name>
+    <filter-class>com.wallouf.icommerce.filters.PrechargementFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PrechargementFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>com.wallouf.icommerce.config.InitialisationDaoFactory</listener-class>
+  </listener>
   <servlet>
     <servlet-name>CreationClient</servlet-name>
     <servlet-class>com.wallouf.icommerce.servlets.CreationClient</servlet-class>
-		<init-param>
-			<param-name>chemin</param-name> 
-			<param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value> 
-		</init-param>
-		<multipart-config>
-			<location>/Users/wallouf/Documents/DEV/fileTemp</location>
-			<max-file-size>2097152</max-file-size> <!-- 2 Mo -->
-			<max-request-size>5242880</max-request-size> <!-- 5 x 1 Mo -->
-			<file-size-threshold>1048576</file-size-threshold> <!-- 1 Mo -->
-		</multipart-config>
+    <init-param>
+      <param-name>chemin</param-name>
+      <param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value>
+    </init-param>
+    <multipart-config>
+      <location>/Users/wallouf/Documents/DEV/fileTemp</location>
+      <max-file-size>2097152</max-file-size>
+      <max-request-size>5242880</max-request-size>
+      <file-size-threshold>1048576</file-size-threshold>
+    </multipart-config>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreationClient</servlet-name>
@@ -39,16 +63,16 @@
   <servlet>
     <servlet-name>CreationCommande</servlet-name>
     <servlet-class>com.wallouf.icommerce.servlets.CreationCommande</servlet-class>
-		<init-param>
-			<param-name>chemin</param-name> 
-			<param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value> 
-		</init-param>
-		<multipart-config>
-			<location>/Users/wallouf/Documents/DEV/fileTemp</location>
-			<max-file-size>2097152</max-file-size> <!-- 2 Mo -->
-			<max-request-size>5242880</max-request-size> <!-- 5 x 10 Mo -->
-			<file-size-threshold>1048576</file-size-threshold> <!-- 1 Mo -->
-		</multipart-config>
+    <init-param>
+      <param-name>chemin</param-name>
+      <param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value>
+    </init-param>
+    <multipart-config>
+      <location>/Users/wallouf/Documents/DEV/fileTemp</location>
+      <max-file-size>2097152</max-file-size>
+      <max-request-size>5242880</max-request-size>
+      <file-size-threshold>1048576</file-size-threshold>
+    </multipart-config>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreationCommande</servlet-name>
@@ -89,10 +113,10 @@
   <servlet>
     <servlet-name>Download</servlet-name>
     <servlet-class>com.wallouf.icommerce.servlets.Download</servlet-class>
-	<init-param>
-		<param-name>chemin</param-name> 
-		<param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value> 
-	</init-param>
+    <init-param>
+      <param-name>chemin</param-name>
+      <param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>Download</servlet-name>
@@ -101,30 +125,13 @@
   <servlet>
     <servlet-name>ShowImage</servlet-name>
     <servlet-class>com.wallouf.icommerce.servlets.ShowImage</servlet-class>
-	<init-param>
-		<param-name>chemin</param-name> 
-		<param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value> 
-	</init-param>
+    <init-param>
+      <param-name>chemin</param-name>
+      <param-value>/Users/wallouf/Documents/DEV/fileTemp/</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>ShowImage</servlet-name>
     <url-pattern>/images/*</url-pattern>
   </servlet-mapping>
-  
-  <filter>
-    <filter-name>Set Character Encoding</filter-name>
-    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ignore</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>Set Character Encoding</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
 </web-app>

@@ -20,13 +20,12 @@ import com.wallouf.icommerce.dao.ClientDao;
 import eu.medsea.mimeutil.MimeUtil;
 
 public class CreationClientForm {
-    private static final String PARAM_nomClientErreur = "Merci de saisir un autre nom, car ce compte existe déjà.";
     private static final String PARAM_nomClient       = "nomClient";
     private static final String PARAM_prenomClient    = "prenomClient";
     private static final String PARAM_adresseClient   = "adresseClient";
     private static final String PARAM_telephoneClient = "telephoneClient";
     private static final String PARAM_emailClient     = "emailClient";
-    private static final String CHAMP_FICHIER         = "fichier";
+    private static final String PARAM_imageClient     = "fichier";
     private static final int    TAILLE_TAMPON         = 10240;
 
     private String              message;
@@ -54,54 +53,16 @@ public class CreationClientForm {
         String adresse = getValeurChamp( request, PARAM_adresseClient );
         String telephone = getValeurChamp( request, PARAM_telephoneClient );
         String email = getValeurChamp( request, PARAM_emailClient );
-        String image = null;
         Client client = new Client();
 
+        traiterNom( nom, client );
+        traiterPrenom( prenom, client );
+        traiterAdresse( adresse, client );
+        traiterTelephone( telephone, client );
+        traiterEmail( email, client );
+        traiterImage( client, request, chemin );
+
         /* Si aucune erreur n'est survenue jusqu'à présent */
-        if ( erreurs.isEmpty() ) {
-
-            try {
-                validationNom( nom );
-            } catch ( Exception e ) {
-                setErreur( PARAM_nomClient, e.getMessage() );
-            }
-            client.setNom( nom );
-            try {
-                validationPrenom( prenom );
-            } catch ( Exception e ) {
-                setErreur( PARAM_prenomClient, e.getMessage() );
-            }
-            client.setPrenom( prenom );
-            try {
-                validationAdresse( adresse );
-            } catch ( Exception e ) {
-                setErreur( PARAM_adresseClient, e.getMessage() );
-            }
-            client.setAdresse( adresse );
-
-            try {
-                validationTelephone( telephone );
-            } catch ( Exception e ) {
-                setErreur( PARAM_telephoneClient, e.getMessage() );
-            }
-            client.setTelephone( telephone );
-
-            try {
-                validationEmail( email );
-            } catch ( Exception e ) {
-                setErreur( PARAM_emailClient, e.getMessage() );
-            }
-            client.setEmail( email );
-
-            /* Validation du champ fichier. */
-            try {
-                image = validationImage( request, chemin );
-            } catch ( Exception e ) {
-                setErreur( CHAMP_FICHIER, e.getMessage() );
-            }
-            client.setImage( image );
-        }
-
         if ( erreurs.isEmpty() ) {
             message = "Succès de l'inscription.";
             /**
@@ -115,15 +76,70 @@ public class CreationClientForm {
         return client;
     }
 
-    private void validationEmail( String email ) throws Exception {
+    private void traiterNom( String nom, Client client ) {
+        try {
+            validationNom( nom );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_nomClient, e.getMessage() );
+        }
+        client.setNom( nom );
+    }
+
+    private void traiterPrenom( String prenom, Client client ) {
+        try {
+            validationNom( prenom );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_nomClient, e.getMessage() );
+        }
+        client.setPrenom( prenom );
+    }
+
+    private void traiterAdresse( String adresse, Client client ) {
+        try {
+            validationAdresse( adresse );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_adresseClient, e.getMessage() );
+        }
+        client.setAdresse( adresse );
+    }
+
+    private void traiterTelephone( String telephone, Client client ) {
+        try {
+            validationTelephone( telephone );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_telephoneClient, e.getMessage() );
+        }
+        client.setTelephone( telephone );
+    }
+
+    private void traiterEmail( String email, Client client ) {
+        try {
+            validationEmail( email );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_emailClient, e.getMessage() );
+        }
+        client.setEmail( email );
+    }
+
+    private void traiterImage( Client client, HttpServletRequest request, String chemin ) {
+        String image = null;
+        try {
+            image = validationImage( request, chemin );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_imageClient, e.getMessage() );
+        }
+        client.setImage( image );
+    }
+
+    private void validationEmail( String email ) throws FormValidationException {
         if ( email != null && email.length() > 0 ) {
             if ( !email.matches( "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)" ) ) {
-                throw new Exception( "Merci de saisir une adresse mail valide." );
+                throw new FormValidationException( "Merci de saisir une adresse mail valide." );
             }
         }
     }
 
-    private String validationImage( HttpServletRequest request, String chemin ) throws Exception {
+    private String validationImage( HttpServletRequest request, String chemin ) throws FormValidationException {
         /*
          * Récupération du contenu du champ image du formulaire. Il faut ici
          * utiliser la méthode getPart().
@@ -131,7 +147,7 @@ public class CreationClientForm {
         String nomFichier = null;
         InputStream contenuFichier = null;
         try {
-            Part part = request.getPart( CHAMP_FICHIER );
+            Part part = request.getPart( PARAM_imageClient );
             nomFichier = getNomFichier( part );
 
             /*
@@ -166,7 +182,7 @@ public class CreationClientForm {
                     /* Ecriture du fichier sur le disque */
                     ecrireFichier( contenuFichier, nomFichier, chemin );
                 } else {
-                    throw new Exception( "Le fichier envoyé doit être une image." );
+                    throw new FormValidationException( "Le fichier envoyé doit être une image." );
                 }
             }
         } catch ( IllegalStateException e ) {
@@ -176,7 +192,7 @@ public class CreationClientForm {
              * notre servlet d'upload dans le fichier web.xml
              */
             // e.printStackTrace();
-            throw new Exception( "Le fichier envoyé ne doit pas dépasser 1Mo." );
+            throw new FormValidationException( "Le fichier envoyé ne doit pas dépasser 1Mo." );
         } catch ( IOException e ) {
             /*
              * Exception retournée si une erreur au niveau des répertoires de
@@ -184,51 +200,53 @@ public class CreationClientForm {
              * insuffisants, etc.)
              */
             // e.printStackTrace();
-            throw new Exception( "Erreur de configuration du serveur." );
+            throw new FormValidationException( "Erreur de configuration du serveur." );
         } catch ( ServletException e ) {
             /*
              * Exception retournée si la requête n'est pas de type
              * multipart/form-data.
              */
             // e.printStackTrace();
-            throw new Exception(
+            throw new FormValidationException(
                     "Ce type de requête n'est pas supporté, merci d'utiliser le formulaire prévu pour envoyer votre fichier." );
         }
 
         return nomFichier;
     }
 
-    private void validationNom( String nom ) throws Exception {
+    private void validationNom( String nom ) throws FormValidationException {
         if ( nom != null && nom.length() < 2 ) {
-            throw new Exception( "Le nom d'utilisateur doit contenir au moins 2 caractères." );
+            throw new FormValidationException( "Le nom d'utilisateur doit contenir au moins 2 caractères." );
         } else if ( nom == null ) {
-            throw new Exception( "Merci de saisir un nom." );
+            throw new FormValidationException( "Merci de saisir un nom." );
         }
     }
 
-    private void validationPrenom( String prenom ) throws Exception {
+    private void validationPrenom( String prenom ) throws FormValidationException {
         if ( prenom != null && prenom.length() < 2 && prenom.length() > 0 ) {
-            throw new Exception( "Le prenom de l'utilisateur doit contenir au moins 2 caractères." );
+            throw new FormValidationException( "Le prenom de l'utilisateur doit contenir au moins 2 caractères." );
         }
     }
 
-    private void validationAdresse( String adresse ) throws Exception {
+    private void validationAdresse( String adresse ) throws FormValidationException {
         if ( adresse != null && adresse.length() < 10 ) {
-            throw new Exception( "L'adresse de l'utilisateur doit contenir au moins 10 caractères." );
+            throw new FormValidationException( "L'adresse de l'utilisateur doit contenir au moins 10 caractères." );
         } else if ( adresse == null ) {
-            throw new Exception( "Merci de saisir une adresse." );
+            throw new FormValidationException( "Merci de saisir une adresse." );
         }
     }
 
-    private void validationTelephone( String telephone ) throws Exception {
+    private void validationTelephone( String telephone ) throws FormValidationException {
         if ( telephone != null && telephone.length() > 0 ) {
             if ( !telephone.matches( "^\\d+$" ) ) {
-                throw new Exception( "Merci de saisir un telephone valide et d'au moins 4 chiffres." );
+                throw new FormValidationException( "Merci de saisir un telephone valide et d'au moins 4 chiffres." );
             } else if ( telephone.length() < 4 ) {
-                throw new Exception( "Merci de saisir un telephone d'au moins 4 chiffres." );
+                throw new FormValidationException( "Merci de saisir un telephone d'au moins 4 chiffres." );
+            } else if ( telephone.length() > 10 ) {
+                throw new FormValidationException( "Merci de saisir un telephone de moins de 10 chiffres." );
             }
         } else if ( telephone == null || telephone.length() <= 0 ) {
-            throw new Exception( "Merci de saisir un telephone." );
+            throw new FormValidationException( "Merci de saisir un telephone." );
         }
     }
 
@@ -272,7 +290,7 @@ public class CreationClientForm {
      * Méthode utilitaire qui a pour but d'écrire le fichier passé en paramètre
      * sur le disque, dans le répertoire donné et avec le nom donné.
      */
-    private void ecrireFichier( InputStream contenu, String nomFichier, String chemin ) throws Exception {
+    private void ecrireFichier( InputStream contenu, String nomFichier, String chemin ) throws FormValidationException {
         /* Prépare les flux. */
         BufferedInputStream entree = null;
         BufferedOutputStream sortie = null;
@@ -291,6 +309,8 @@ public class CreationClientForm {
             while ( ( longueur = entree.read( tampon ) ) > 0 ) {
                 sortie.write( tampon, 0, longueur );
             }
+        } catch ( Exception e ) {
+            throw new FormValidationException( "Erreur lors de l'écriture du fichier sur le disque." );
         } finally {
             try {
                 sortie.close();

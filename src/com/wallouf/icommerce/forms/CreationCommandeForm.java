@@ -100,42 +100,11 @@ public class CreationCommandeForm {
                 setErreur( PARAM_clientId, "Impossible de retrouver le client. Veuillez reessayer." );
             }
         }
-
-        try {
-            validationModePaiement( modePaiementCommande );
-        } catch ( Exception e ) {
-            setErreur( PARAM_modePaiementCommande, e.getMessage() );
-        }
-        commande.setModeDePaiement( modePaiementCommande );
-
-        try {
-            validationStatutPaiement( statutPaiementCommande );
-        } catch ( Exception e ) {
-            setErreur( PARAM_statutPaiementCommande, e.getMessage() );
-        }
-        commande.setStatutDePaiement( statutPaiementCommande );
-
-        try {
-            validationModeLivraison( modeLivraisonCommande );
-        } catch ( Exception e ) {
-            setErreur( PARAM_modeLivraisonCommande, e.getMessage() );
-        }
-        commande.setModeDeLivraison( modeLivraisonCommande );
-
-        try {
-            validationStatutLivraison( statutLivraisonCommande );
-        } catch ( Exception e ) {
-            setErreur( PARAM_statutLivraisonCommande, e.getMessage() );
-        }
-        commande.setStatutDeLivraison( statutLivraisonCommande );
-
-        try {
-            validationMontant( montantCommande );
-            commande.setMontant( Double.valueOf( montantCommande ) );
-        } catch ( Exception e ) {
-            setErreur( PARAM_montantCommande, e.getMessage() );
-            commande.setMontant( 0.0 );
-        }
+        traiterMontant( montantCommande, commande );
+        traiterModePaiement( modePaiementCommande, commande );
+        traiterStatutPaiement( statutPaiementCommande, commande );
+        traiterModeLivraison( modeLivraisonCommande, commande );
+        traiterStatutLivraison( statutLivraisonCommande, commande );
 
         if ( erreurs.isEmpty() ) {
             message = "Succès de la création de la commande.";
@@ -156,46 +125,99 @@ public class CreationCommandeForm {
         return commande;
     }
 
-    private void validationModePaiement( String modePaiementCommande ) throws Exception {
-        if ( modePaiementCommande != null && modePaiementCommande.length() < 2 ) {
-            throw new Exception( "Le mode de paiement doit contenir au moins 2 caractères." );
-        } else if ( modePaiementCommande == null ) {
-            throw new Exception( "Merci de saisir un mode de paiement." );
-        }
-    }
-
-    private void validationModeLivraison( String modeLivraisonCommande ) throws Exception {
-        if ( modeLivraisonCommande != null && modeLivraisonCommande.length() < 2 ) {
-            throw new Exception( "Le mode de livraison doit contenir au moins 2 caractères." );
-        } else if ( modeLivraisonCommande == null ) {
-            throw new Exception( "Merci de saisir un mode de livraison." );
-        }
-    }
-
-    private void validationStatutPaiement( String statutCommande ) throws Exception {
-        if ( statutCommande != null && statutCommande.length() < 2 && statutCommande.length() > 0 ) {
-            throw new Exception( "Le statut de paiement doit contenir au moins 2 caractères." );
-        }
-    }
-
-    private void validationStatutLivraison( String statutLivraison ) throws Exception {
-        if ( statutLivraison != null && statutLivraison.length() < 2 && statutLivraison.length() > 0 ) {
-            throw new Exception( "Le statut de livraison doit contenir au moins 2 caractères." );
-        }
-    }
-
-    private void validationMontant( String montantCommande ) throws Exception {
-        Double montant;
+    private void traiterMontant( String montant, Commande commande ) {
+        double valeurMontant = -1;
         try {
-            montant = Double.valueOf( montantCommande );
-        } catch ( Exception e ) {
-            throw new Exception( "Le montant doit être un chiffre." );
+            valeurMontant = validationMontant( montant );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_montantCommande, e.getMessage() );
         }
-        if ( montant.isNaN() ) {
-            throw new Exception( "Le montant doit être un chiffre." );
-        } else if ( montant <= 0.0 ) {
-            throw new Exception( "Le montant doit être positif et supérieur à zéro." );
+        commande.setMontant( valeurMontant );
+    }
+
+    private void traiterModePaiement( String modePaiement, Commande commande ) {
+        try {
+            validationModePaiement( modePaiement );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_modePaiementCommande, e.getMessage() );
         }
+        commande.setModeDePaiement( modePaiement );
+    }
+
+    private void traiterStatutPaiement( String statutPaiement, Commande commande ) {
+        try {
+            validationStatutPaiement( statutPaiement );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_statutPaiementCommande, e.getMessage() );
+        }
+        commande.setStatutDePaiement( statutPaiement );
+    }
+
+    private void traiterModeLivraison( String modeLivraison, Commande commande ) {
+        try {
+            validationModeLivraison( modeLivraison );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_modeLivraisonCommande, e.getMessage() );
+        }
+        commande.setModeDeLivraison( modeLivraison );
+    }
+
+    private void traiterStatutLivraison( String statutLivraison, Commande commande ) {
+        try {
+            validationStatutLivraison( statutLivraison );
+        } catch ( FormValidationException e ) {
+            setErreur( PARAM_statutLivraisonCommande, e.getMessage() );
+        }
+        commande.setStatutDeLivraison( statutLivraison );
+    }
+
+    private void validationModePaiement( String modePaiementCommande ) throws FormValidationException {
+        if ( modePaiementCommande != null && modePaiementCommande.length() < 2 ) {
+            throw new FormValidationException( "Le mode de paiement doit contenir au moins 2 caractères." );
+        } else if ( modePaiementCommande == null ) {
+            throw new FormValidationException( "Merci de saisir un mode de paiement." );
+        }
+    }
+
+    private void validationModeLivraison( String modeLivraisonCommande ) throws FormValidationException {
+        if ( modeLivraisonCommande != null && modeLivraisonCommande.length() < 2 ) {
+            throw new FormValidationException( "Le mode de livraison doit contenir au moins 2 caractères." );
+        } else if ( modeLivraisonCommande == null ) {
+            throw new FormValidationException( "Merci de saisir un mode de livraison." );
+        }
+    }
+
+    private void validationStatutPaiement( String statutCommande ) throws FormValidationException {
+        if ( statutCommande != null && statutCommande.length() < 2 && statutCommande.length() > 0 ) {
+            throw new FormValidationException( "Le statut de paiement doit contenir au moins 2 caractères." );
+        }
+    }
+
+    private void validationStatutLivraison( String statutLivraison ) throws FormValidationException {
+        if ( statutLivraison != null && statutLivraison.length() < 2 && statutLivraison.length() > 0 ) {
+            throw new FormValidationException( "Le statut de livraison doit contenir au moins 2 caractères." );
+        }
+    }
+
+    private Double validationMontant( String montantCommande ) throws FormValidationException {
+        Double montant;
+        if ( montantCommande != null ) {
+            try {
+                montant = Double.valueOf( montantCommande );
+                if ( montant.isNaN() ) {
+                    throw new FormValidationException( "Le montant doit être un chiffre." );
+                } else if ( montant <= 0.0 ) {
+                    throw new FormValidationException( "Le montant doit être positif et supérieur à zéro." );
+                }
+            } catch ( Exception e ) {
+                montant = 0.0;
+                throw new FormValidationException( "Le montant doit être un chiffre." );
+            }
+        } else {
+            montant = 0.0;
+            throw new FormValidationException( "Merci d'entrer un montant." );
+        }
+        return montant;
     }
 
 }
