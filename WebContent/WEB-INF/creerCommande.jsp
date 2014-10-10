@@ -51,7 +51,7 @@
                     <legend>Informations commande</legend>
                      
                     <label for="dateCommande">Date <span class="requis">*</span></label>
-                    <input type="text" id="dateCommande" name="dateCommande" value="<c:out value="${commande.dateCommande }" />" size="20" maxlength="20" disabled />
+                    <input type="text" id="dateCommande" name="dateCommande" value="<c:out value="${commande.date }" />" size="20" maxlength="20" disabled />
                     <br />
                      
                     <label for="montantCommande">Montant <span class="requis">*</span></label>

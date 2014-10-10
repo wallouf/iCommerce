@@ -111,16 +111,6 @@ public class CreationCommandeForm {
             commandeDao.creer( commande );
         } else {
             message = "Échec de la création de la commande.";
-            // suppression du client cree
-            Map<Long, Client> listeClient = (Map<Long, Client>) session.getAttribute( PARAM_listeClient );
-            Long clientId = commande.getClient().getId();
-            if ( ( !erreurs.containsKey( PARAM_nomClient ) || !erreurs.get( PARAM_nomClient ).equalsIgnoreCase(
-                    PARAM_nomClientErreur ) )
-                    && !listeClient.isEmpty()
-                    && listeClient.containsKey( clientId ) ) {
-                listeClient.remove( clientId );
-            }
-            session.setAttribute( PARAM_listeClient, listeClient );
         }
         return commande;
     }
