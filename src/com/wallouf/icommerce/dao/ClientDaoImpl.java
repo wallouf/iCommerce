@@ -3,13 +3,13 @@ package com.wallouf.icommerce.dao;
 import static com.wallouf.icommerce.dao.DAOUtilitaire.fermeturesSilencieuses;
 import static com.wallouf.icommerce.dao.DAOUtilitaire.initialisationRequetePreparee;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 import com.wallouf.icommerce.beans.Client;
 
 public class ClientDaoImpl implements ClientDao {
@@ -49,8 +49,8 @@ public class ClientDaoImpl implements ClientDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_INSERT, true,
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_INSERT, true,
                     client.getNom(), client.getPrenom(), client.getAdresse(), client.getTelephone(), client.getEmail(),
                     client.getImage() );
             int statut = preparedStatement.executeUpdate();
@@ -86,8 +86,8 @@ public class ClientDaoImpl implements ClientDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion,
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion,
                     SQL_SELECT_PAR_ID,
                     false, id );
             resultSet = preparedStatement.executeQuery();
@@ -114,8 +114,8 @@ public class ClientDaoImpl implements ClientDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion,
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion,
                     SQL_SELECT,
                     false );
             resultSet = preparedStatement.executeQuery();
@@ -141,8 +141,8 @@ public class ClientDaoImpl implements ClientDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = (Connection) daoFactory.getConnection();
-            preparedStatement = (PreparedStatement) initialisationRequetePreparee( connexion, SQL_DELETE_PAR_ID, true,
+            connexion = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_DELETE_PAR_ID, true,
                     client.getId() );
             int statut = preparedStatement.executeUpdate();
             /* Analyse du statut retourné par la requête d'insertion */
