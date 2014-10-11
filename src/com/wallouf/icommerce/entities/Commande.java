@@ -1,33 +1,36 @@
-package com.wallouf.icommerce.beans;
+package com.wallouf.icommerce.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.joda.time.DateTime;
 
+@Entity
 public class Commande {
 
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long     id;
+    @ManyToOne
+    @JoinColumn( name = "id_client" )
     private Client   client;
+    @Column( name = "modeDePaiement" )
     private String   modeDePaiement;
+    @Column( name = "statutDePaiement" )
     private String   statutDePaiement;
+    @Column( name = "modeDeLivraison" )
     private String   modeDeLivraison;
+    @Column( name = "statutDeLivraison" )
     private String   statutDeLivraison;
+    @Column( name = "date" )
     private DateTime date;
+    @Column( name = "montant" )
     private double   montant;
-
-    public Commande() {
-        super();
-    }
-
-    public Commande( Client client, String modeDePaiement,
-            String statutDePaiement, String modeDeLivraison,
-            String statutDeLivraison, double montant ) {
-        super();
-        this.client = client;
-        this.modeDePaiement = modeDePaiement;
-        this.statutDePaiement = statutDePaiement;
-        this.modeDeLivraison = modeDeLivraison;
-        this.statutDeLivraison = statutDeLivraison;
-        this.montant = montant;
-    }
 
     public Long getId() {
         return id;

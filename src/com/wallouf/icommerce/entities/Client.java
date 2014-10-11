@@ -1,29 +1,29 @@
-package com.wallouf.icommerce.beans;
+package com.wallouf.icommerce.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Client {
 
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long   id;
+    @Column( name = "nom" )
     private String nom;
+    @Column( name = "prenom" )
     private String prenom;
+    @Column( name = "adresse" )
     private String adresse;
+    @Column( name = "email" )
     private String email;
+    @Column( name = "telephone" )
     private String telephone;
+    @Column( name = "image" )
     private String image;
-
-    public Client() {
-        super();
-    }
-
-    public Client( String nom, String prenom, String adresse, String email,
-            String telephone ) {
-        super();
-        this.nom = nom;
-        this.prenom = prenom;
-        this.adresse = adresse;
-        this.email = email;
-        this.telephone = telephone;
-    }
 
     public Long getId() {
         return id;

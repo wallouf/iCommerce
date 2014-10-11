@@ -2,7 +2,7 @@ package com.wallouf.icommerce.dao;
 
 import java.util.List;
 
-import com.wallouf.icommerce.beans.Client;
+import com.wallouf.icommerce.entities.Client;
 
 public interface ClientDao {
 

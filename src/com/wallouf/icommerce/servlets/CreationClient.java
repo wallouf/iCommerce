@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.wallouf.icommerce.beans.Client;
 import com.wallouf.icommerce.dao.ClientDao;
 import com.wallouf.icommerce.dao.DAOFactory;
+import com.wallouf.icommerce.entities.Client;
 import com.wallouf.icommerce.forms.CreationClientForm;
 
 /**

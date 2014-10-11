@@ -8,10 +8,10 @@ import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
-import com.wallouf.icommerce.beans.Client;
-import com.wallouf.icommerce.beans.Commande;
 import com.wallouf.icommerce.dao.ClientDao;
 import com.wallouf.icommerce.dao.CommandeDao;
+import com.wallouf.icommerce.entities.Client;
+import com.wallouf.icommerce.entities.Commande;
 
 public class CreationCommandeForm {
 

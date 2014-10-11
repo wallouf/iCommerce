@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.wallouf.icommerce.beans.Commande;
 import com.wallouf.icommerce.dao.ClientDao;
 import com.wallouf.icommerce.dao.CommandeDao;
 import com.wallouf.icommerce.dao.DAOFactory;
+import com.wallouf.icommerce.entities.Commande;
 import com.wallouf.icommerce.forms.CreationCommandeForm;
 
 /**

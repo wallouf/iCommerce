@@ -14,8 +14,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
-import com.wallouf.icommerce.beans.Client;
 import com.wallouf.icommerce.dao.ClientDao;
+import com.wallouf.icommerce.entities.Client;
 
 import eu.medsea.mimeutil.MimeUtil;
 

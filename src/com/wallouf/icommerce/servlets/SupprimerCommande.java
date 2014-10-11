@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.wallouf.icommerce.beans.Commande;
 import com.wallouf.icommerce.dao.CommandeDao;
 import com.wallouf.icommerce.dao.DAOException;
 import com.wallouf.icommerce.dao.DAOFactory;
+import com.wallouf.icommerce.entities.Commande;
 
 /**
  * Servlet implementation class SupprimerCommande

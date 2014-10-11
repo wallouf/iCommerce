@@ -2,7 +2,7 @@ package com.wallouf.icommerce.dao;
 
 import java.util.List;
 
-import com.wallouf.icommerce.beans.Commande;
+import com.wallouf.icommerce.entities.Commande;
 
 public interface CommandeDao {
 
