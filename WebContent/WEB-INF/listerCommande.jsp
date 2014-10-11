@@ -32,7 +32,7 @@
 				<tr>
 					<td><c:out value="${liste.key }" /></td>
 					<td><c:out value="${liste.value.client.nom }" /></td>
-					<td><joda:format value="${ commande.date }" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+					<td><joda:format value="${ liste.value.date }" pattern="dd/MM/yyyy HH:mm:ss"/></td>
 					<td><c:out value="${liste.value.montant }" /></td>
 					<td><c:out value="${liste.value.modeDePaiement }" /></td>
 					<td><c:out value="${liste.value.statutDePaiement }" /></td>

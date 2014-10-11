@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -24,7 +25,7 @@
 	
 	<p>Données du commande :</p>
 	<ul>
-		<li>Date : <c:out value="${commande.dateCommande }" /></li>
+		<li>Date : <joda:format value="${ commande.date }" pattern="dd/MM/yyyy HH:mm:ss"/></li>
 		<li>Montant : <c:out value="${commande.montant }" /></li>
 		<li>Mode de paiement : <c:out value="${commande.modeDePaiement }" /></li>
 		<li>Statu du paiement : <c:out value="${commande.statutDePaiement }" /></li>
