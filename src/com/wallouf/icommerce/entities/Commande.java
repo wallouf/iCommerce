@@ -8,7 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 import org.joda.time.DateTime;
+
+import com.wallouf.icommerce.tools.JodaDateTimeConverter;
 
 @Entity
 public class Commande {
@@ -27,7 +31,9 @@ public class Commande {
     private String   modeDeLivraison;
     @Column( name = "statutDeLivraison" )
     private String   statutDeLivraison;
-    @Column( name = "date" )
+    @Column( columnDefinition = "TIMESTAMP" )
+    @Converter( name = "dateTimeConverter", converterClass = JodaDateTimeConverter.class )
+    @Convert( "dateTimeConverter" )
     private DateTime date;
     @Column( name = "montant" )
     private double   montant;

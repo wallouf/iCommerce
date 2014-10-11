@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -13,39 +14,28 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.dao.ClientDao;
 import com.wallouf.icommerce.dao.CommandeDao;
-import com.wallouf.icommerce.dao.DAOFactory;
 import com.wallouf.icommerce.entities.Client;
 import com.wallouf.icommerce.entities.Commande;
 
 /**
  * Servlet Filter implementation class PrechargementFilter
  */
-@WebFilter( "/PrechargementFilter" )
+@WebFilter( urlPatterns = "/*" )
 public class PrechargementFilter implements Filter {
-    public static final String CONF_DAO_FACTORY    = "daofactory";
     public static final String PARAM_listeCommande = "listeCommande";
     public static final String PARAM_listeClient   = "listeClient";
 
+    // Injection de notre EJB (Session Bean Stateless)
+    @EJB
     private CommandeDao        commandeDao;
 
+    // Injection de notre EJB (Session Bean Stateless)
+    @EJB
     private ClientDao          clientDao;
-
-    /**
-     * Default constructor.
-     */
-    public void init( FilterConfig config ) throws ServletException {
-        // TODO Auto-generated constructor stub
-        /* Récupération d'une instance de notre DAO Utilisateur */
-        this.commandeDao = ( (DAOFactory) config.getServletContext().getAttribute( CONF_DAO_FACTORY ) )
-                .getCommandeDao();
-        /* Récupération d'une instance de notre DAO Utilisateur */
-        this.clientDao = ( (DAOFactory) config.getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getClientDao();
-    }
 
     /**
      * @see Filter#destroy()
@@ -62,7 +52,6 @@ public class PrechargementFilter implements Filter {
         // TODO Auto-generated method stub
         // place your code here
         HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession();
         /*
          * Si la map des clients n'existe pas en session, alors l'utilisateur se
@@ -99,6 +88,12 @@ public class PrechargementFilter implements Filter {
         }
         // pass the request along the filter chain
         chain.doFilter( request, response );
+    }
+
+    @Override
+    public void init( FilterConfig arg0 ) throws ServletException {
+        // TODO Auto-generated method stub
+
     }
 
 }

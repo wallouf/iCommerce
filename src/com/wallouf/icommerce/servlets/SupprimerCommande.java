@@ -3,6 +3,7 @@ package com.wallouf.icommerce.servlets;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,13 +13,12 @@ import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.dao.CommandeDao;
 import com.wallouf.icommerce.dao.DAOException;
-import com.wallouf.icommerce.dao.DAOFactory;
 import com.wallouf.icommerce.entities.Commande;
 
 /**
  * Servlet implementation class SupprimerCommande
  */
-@WebServlet( "/SupprimerCommande" )
+@WebServlet( name = "SupprimerCommande", urlPatterns = "/supprimerCommande" )
 public class SupprimerCommande extends HttpServlet {
     public static final String CONF_DAO_FACTORY    = "daofactory";
     public static final String PARAM_listeCommande = "listeCommande";
@@ -26,12 +26,9 @@ public class SupprimerCommande extends HttpServlet {
     public static final String VUE                 = "/WEB-INF/listerCommande.jsp";
     private static final long  serialVersionUID    = 1L;
 
+    // Injection de notre EJB (Session Bean Stateless)
+    @EJB
     private CommandeDao        commandeDao;
-
-    public void init() throws ServletException {
-        /* Récupération d'une instance de notre DAO Utilisateur */
-        this.commandeDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getCommandeDao();
-    }
 
     /**
      * @see HttpServlet#HttpServlet()

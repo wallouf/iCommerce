@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.wallouf.icommerce.dao.ClientDao;
-import com.wallouf.icommerce.dao.DAOFactory;
 import com.wallouf.icommerce.entities.Client;
 import com.wallouf.icommerce.forms.CreationClientForm;
 
 /**
  * Servlet implementation class CreationClient
  */
-@WebServlet( "/CreationClient" )
+@WebServlet( name = "CreationClient", urlPatterns = "/creationClient",
+        initParams = @WebInitParam( name = "chemin", value = "/Users/wallouf/Documents/DEV/fileTemp/" ) )
+@MultipartConfig( location = "/Users/wallouf/Documents/DEV/fileTemp", maxFileSize = 10 * 1024 * 1024, maxRequestSize = 5 * 10 * 1024 * 1024, fileSizeThreshold = 1024 * 1024 )
 public class CreationClient extends HttpServlet {
-    public static final String  CONF_DAO_FACTORY  = "daofactory";
 
     public static final String  PARAM_listeClient = "listeClient";
     private static final String ATT_client        = "client";
@@ -31,13 +34,9 @@ public class CreationClient extends HttpServlet {
     private static final String vueAfficher       = "/WEB-INF/afficherClient.jsp";
 
     private static final long   serialVersionUID  = 1L;
-
+    // Injection de notre EJB (Session Bean Stateless)
+    @EJB
     private ClientDao           clientDao;
-
-    public void init() throws ServletException {
-        /* Récupération d'une instance de notre DAO Utilisateur */
-        this.clientDao = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getClientDao();
-    }
 
     /**
      * @see HttpServlet#HttpServlet()

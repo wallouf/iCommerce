@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ListerCommande
  */
-@WebServlet( "/ListerCommande" )
+@WebServlet( name = "ListerCommande", urlPatterns = "/listerCommande" )
 public class ListerCommande extends HttpServlet {
     private static final long  serialVersionUID = 1L;
     public static final String VUE              = "/WEB-INF/listerCommande.jsp";
